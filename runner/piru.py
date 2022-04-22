@@ -1,30 +1,72 @@
 # PIpeline RUnner -- (c)2022 David SPORN
 # GPL3
-########################################$
+########################################
+from console.logger import debug, info
 #
 # Concepts :
 # * pipeline stages
 #
 # class annotation
-class pipeline:
-    def __init__(self, clazz=None, *, stages: tuple = ()):
-        self.stages = stages
-        self.clazz = clazz
+def pipeline(*, stages: tuple):
+    debug(f"pipeline stages : {stages}")
+    # TODO registers the sequence of stages
+    def decorator_pipeline(func):
+        # TODO scans the class to look for jobs and extension points.
+        return func
+    return decorator_pipeline
 
-    def __call__(self, *args, **kwargs):
-        self.instance = self.clazz(args, kwargs)
-        return self
+def job(_func=None, *, stage: str = None):
+    def decorator_job(func):
+        def wrapper_job(*args, **kwargs):
+            # before
+            func(args, kwargs)
+            # after
+        return wrapper_job
 
-    def execute(env):
-        # foreach stage listed, execute self.instance[stage](env)
-        pass
+    if _func is None:
+        return decorator_job
+    else:
+        return decorator_job(_func)
 
-def job(func, *, stage: str = None):
-    def wrapper_stage(*args, **kwargs):
+def before_all(func):
+    def wrapper_before_all(* args, **kwargs):
         # before
         func(args, kwargs)
         # after
-    return wrapper_stage
+    return wrapper_before_all
+
+def after_all(func):
+    def wrapper_after_all(* args, **kwargs):
+        # before
+        func(args, kwargs)
+        # after
+    return wrapper_after_all
+
+def before_each(_func=None, *, stage: str = None):
+    def decorator_before_each(func):
+        def wrapper_before_each(*args, **kwargs):
+            # before
+            func(args, kwargs)
+            # after
+        return wrapper_before_each
+
+    if _func is None:
+        return decorator_before_each
+    else:
+        return decorator_before_each(_func)
+
+def after_each(_func=None, *, stage: str = None):
+    def decorator_after_each(func):
+        def wrapper_after_each(*args, **kwargs):
+            # before
+            func(args, kwargs)
+            # after
+        return wrapper_after_each
+
+    if _func is None:
+        return decorator_after_each
+    else:
+        return decorator_after_each(_func)
 
 def python_pipeline_runner(p, env: dict = {}):
     if p is pipeline:

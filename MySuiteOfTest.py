@@ -1,7 +1,7 @@
 from console.logger import trace, debug, info, ok, warn, error, fatal
-from runner.piru import pipeline, job, python_pipeline_runner
+from runner.piru import pipeline, job, before_all, before_each, after_all, after_each, python_pipeline_runner
 
-@pipeline(stages=["first_stage","second_stage","third_stage"])
+@pipeline(stages=("first_stage","second_stage","third_stage"))
 class MySuiteOfTestWithExplicitStages:
     def __init__(self):
         trace("MySuiteOfTestWithExplicitStages -- Instanciation")
@@ -76,4 +76,6 @@ class MySuiteOfTestWithExplicitStages:
 
 ### demo
 if __name__ == "__main__":
-    python_pipeline_runner(MySuiteOfTestWithExplicitStages())
+    instance = MySuiteOfTestWithExplicitStages()
+    debug(instance)
+    #python_pipeline_runner(MySuiteOfTestWithExplicitStages())
