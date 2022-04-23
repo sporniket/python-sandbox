@@ -28,9 +28,16 @@ def pipeline(_func=None, *, stages: tuple):
     # TODO registers the sequence of stages
     def decorator_pipeline(func):
         def wrapper_pipeline(*args, **kwargs):
-            #before
-            func(args, kwargs)
-            #after
+            info(f"Start of pipeline {func.__name__}")
+            debug(args)
+            debug(kwargs)
+            result = func(kwargs)
+            trace("call each before_all")
+            trace("for each stage...")
+            trace("  \\--filter jobs by stage and execute")
+            trace("call each after_all")
+            ok(f"End of pipeline {func.__name__}")
+            return result
         return wrapper_pipeline
     global pipeline_exec
     if _func is None:
@@ -115,23 +122,3 @@ def after_each(_func=None, *, stage: str = ''):
         result = decorator_after_each(_func)
         register_func(pipeline_after_each, result, stage)
         return result
-
-def python_pipeline_runner(env: dict = {}):
-    info(f"Start python_pipeline_runner")
-    debug("---- PIPELINE ----")
-    debug(pipeline_exec)
-    debug("---- BEFORE ALL ----")
-    debug(pipeline_before_all)
-    debug("---- BEFORE EACH ----")
-    debug(pipeline_before_each)
-    debug("---- JOBS ----")
-    debug(pipeline_jobs)
-    debug("---- AFTER EACH ----")
-    debug(pipeline_after_each)
-    debug("---- AFTER ALL ----")
-    debug(pipeline_after_all)
-    debug("--------------")
-    info("Calling pipeline")
-    pipeline_exec(env)
-    ok("DONE")
-    pass
