@@ -1,7 +1,7 @@
 # PIpeline RUnner -- (c)2022 David SPORN
 # GPL3
 ########################################
-from console.logger import trace, debug, info
+from console.logger import trace, debug, info, ok
 
 pipeline_exec = None
 pipeline_stages = ()
@@ -17,19 +17,30 @@ def register_func(registry:list, func, stage:str=''):
         'stage':stage
     }
     trace(item)
-    registry += item 
+    registry.append(item)
 #
 # Concepts :
 # * pipeline stages
 #
 # class annotation
-def pipeline(*, stages: tuple):
+def pipeline(_func=None, *, stages: tuple):
     trace(f"Register pipeline stages : {stages}")
     # TODO registers the sequence of stages
     def decorator_pipeline(func):
-        # TODO scans the class to look for jobs and extension points.
-        return func
-    return decorator_pipeline
+        def wrapper_pipeline(*args, **kwargs):
+            #before
+            func(args, kwargs)
+            #after
+        return wrapper_pipeline
+    global pipeline_exec
+    if _func is None:
+        result = decorator_pipeline
+        pipeline_exec = result
+        return result
+    else:
+        result = decorator_pipeline(_func)
+        pipeline_exec = result
+        return result
 
 def job(_func=None, *, stage: str = ''):
     trace(f"Register job for stage '{stage}'")
@@ -55,7 +66,9 @@ def before_all(func):
         # before
         func(args, kwargs)
         # after
-    return wrapper_before_all
+    result = wrapper_before_all
+    register_func(pipeline_before_all, result)
+    return result
 
 def after_all(func):
     trace(f"Register after_all")
@@ -63,7 +76,9 @@ def after_all(func):
         # before
         func(args, kwargs)
         # after
-    return wrapper_after_all
+    result = wrapper_after_all
+    register_func(pipeline_before_all, result)
+    return result
 
 def before_each(_func=None, *, stage: str = ''):
     trace(f"Register before_each for stage '{stage}'")
@@ -75,9 +90,13 @@ def before_each(_func=None, *, stage: str = ''):
         return wrapper_before_each
 
     if _func is None:
-        return decorator_before_each
+        result = decorator_before_each
+        register_func(pipeline_before_each, result, stage)
+        return result
     else:
-        return decorator_before_each(_func)
+        result = decorator_before_each(_func)
+        register_func(pipeline_before_each, result, stage)
+        return result
 
 def after_each(_func=None, *, stage: str = ''):
     trace(f"Register after_each for stage '{stage}'")
@@ -89,13 +108,30 @@ def after_each(_func=None, *, stage: str = ''):
         return wrapper_after_each
 
     if _func is None:
-        return decorator_after_each
+        result = decorator_after_each
+        register_func(pipeline_after_each, result, stage)
+        return result
     else:
-        return decorator_after_each(_func)
+        result = decorator_after_each(_func)
+        register_func(pipeline_after_each, result, stage)
+        return result
 
 def python_pipeline_runner(env: dict = {}):
     info(f"Start python_pipeline_runner")
+    debug("---- PIPELINE ----")
+    debug(pipeline_exec)
+    debug("---- BEFORE ALL ----")
+    debug(pipeline_before_all)
+    debug("---- BEFORE EACH ----")
+    debug(pipeline_before_each)
     debug("---- JOBS ----")
     debug(pipeline_jobs)
+    debug("---- AFTER EACH ----")
+    debug(pipeline_after_each)
+    debug("---- AFTER ALL ----")
+    debug(pipeline_after_all)
     debug("--------------")
+    info("Calling pipeline")
+    pipeline_exec(env)
+    ok("DONE")
     pass

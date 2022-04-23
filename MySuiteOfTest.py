@@ -2,8 +2,10 @@ from console.logger import trace, debug, info, ok, warn, error, fatal
 from runner.piru import pipeline, job, before_all, before_each, after_all, after_each, python_pipeline_runner
 
 @pipeline(stages=("first_stage","second_stage","third_stage"))
-def MySuiteOfTestWithExplicitStages():
-    pass
+def MySuiteOfTestWithExplicitStages(env:dict = {}):
+    info("Start of pipeline -- init")
+    debug(env)
+    return env
 
 # A stage is constitued by @jobs for the matching stage,
 # in the order that they will be found while introspecting the class (no guaranteed order)
