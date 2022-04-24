@@ -45,8 +45,9 @@ def pipeline(_func=None, *, stages: tuple):
                 for job in jobs:
                     env = copy.deepcopy(result)
                     for befe in before_each:
-                        debug(befe)
+                        trace(befe)
                         befe['func'](env=env)
+                    trace(job)
                     job['func'](env=env)
                     for afte in after_each:
                         afte['func'](env=env)
@@ -66,24 +67,20 @@ def pipeline(_func=None, *, stages: tuple):
         pipeline_exec = result
         return result
 
-def job(_func=None, *, stage: str = ''):
+def job(_func=None, **kwargs):
+    stage = kwargs['stage'] if 'stage' in kwargs else ''
     trace(f"Register job for stage '{stage}'")
-    def decorator_job(func):
-        def wrapper_job(*args, **kwargs):
-            # before
-            # func(kwargs)
-            # after
-            pass
-        return func
+    def decorator(*args,**kwargs):
+        if len(args) > 0:
+            return args[0] # this is the original function
+        # else the decorator has been called as the original function
+        def wrapper(kwargs):
+            return func(kwargs)
+        return wrapper
 
-    if _func is None:
-        result = decorator_job
-        register_func(pipeline_jobs, result, stage)
-        return result
-    else:
-        result = decorator_job(_func)
-        register_func(pipeline_jobs, result, stage)
-        return result
+    result = decorator if _func is None else _func
+    register_func(pipeline_jobs, result, stage)
+    return result
 
 def before_all(func):
     trace(f"Register before_all")
@@ -108,46 +105,31 @@ def after_all(func):
     return result
 
 def before_each(_func=None, **kwargs):
-    trace(kwargs)
-    raw_stage = kwargs['stage']
-    stage = {} if None == raw_stage else raw_stage
+    stage = kwargs['stage'] if 'stage' in kwargs else ''
     trace(f"Register before_each for stage '{stage}'")
-    def decorator_before_each(*args,**kwargs):
-        debug(args)
-        debug(kwargs)
+    def decorator(*args,**kwargs):
         if len(args) > 0:
-            return args[0] # this is the function
-        def wrapper_before_each(kwargs):
-            # before
+            return args[0] # this is the original function
+        # else the decorator has been called as the original function
+        def wrapper(kwargs):
             return func(kwargs)
-            # after
-            pass
-        return wrapper_before_each
+        return wrapper
 
-    if _func is None:
-        result = decorator_before_each
-        register_func(pipeline_before_each, result, stage)
-        return result
-    else:
-        result = _func
-        register_func(pipeline_before_each, result, stage)
-        return result
+    result = decorator if _func is None else _func
+    register_func(pipeline_before_each, result, stage)
+    return result
 
-def after_each(_func=None, *, stage: str = ''):
+def after_each(_func=None, **kwargs):
+    stage = kwargs['stage'] if 'stage' in kwargs else ''
     trace(f"Register after_each for stage '{stage}'")
-    def decorator_after_each(func):
-        def wrapper_after_each(*args, **kwargs):
-            # before
-            # func(kwargs)
-            # after
-            pass
-        return func
+    def decorator(*args,**kwargs):
+        if len(args) > 0:
+            return args[0] # this is the original function
+        # else the decorator has been called as the original function
+        def wrapper(kwargs):
+            return func(kwargs)
+        return wrapper
 
-    if _func is None:
-        result = decorator_after_each
-        register_func(pipeline_after_each, result, stage)
-        return result
-    else:
-        result = decorator_after_each(_func)
-        register_func(pipeline_after_each, result, stage)
-        return result
+    result = decorator if _func is None else _func
+    register_func(pipeline_after_each, result, stage)
+    return result
