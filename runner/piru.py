@@ -2,10 +2,9 @@
 # GPL3
 ########################################
 import copy
-from console.logger import trace, debug, info, ok
+from console.logger import trace, debug, info, ok, warn
 
 pipeline_exec = None
-pipeline_stages = ()
 pipeline_jobs = []
 pipeline_before_all = []
 pipeline_before_each = []
@@ -29,32 +28,26 @@ def pipeline(_func=None, *, stages: tuple):
     # TODO registers the sequence of stages
     def decorator_pipeline(func):
         def wrapper_pipeline(*args, **kwargs):
-            info(f"Start of pipeline {func.__name__}")
-            debug(args)
-            debug(kwargs)
-            result = func(kwargs)
-            trace("call each before_all")
+            info(f"===[ START OF PIPELINE {func.__name__} ]===")
+            result = func(*args, **kwargs)
             for befa in pipeline_before_all:
                 befa['func'](env=result)
-            trace("for each stage...")
             for stage in stages:
-                trace("  \\--filter jobs by stage and execute")
+                info(f"======[ START OF STAGE {stage} ]======")
                 jobs = [j for j in pipeline_jobs if j['stage'] == stage or j['stage'] == '']
                 before_each = [j for j in pipeline_before_each if j['stage'] == stage or j['stage'] == '']
                 after_each = [j for j in pipeline_after_each if j['stage'] == stage or j['stage'] == '']
                 for job in jobs:
                     env = copy.deepcopy(result)
                     for befe in before_each:
-                        trace(befe)
                         befe['func'](env=env)
-                    trace(job)
                     job['func'](env=env)
                     for afte in after_each:
                         afte['func'](env=env)
+                ok(f"======[ END OF STAGE {stage} ]======")
             for afta in pipeline_after_all:
-                trace("call each after_all")
                 afta['func'](env=env)
-            ok(f"End of pipeline {func.__name__}")
+            ok(f"===[ END OF PIPELINE {func.__name__} ]===")
             return result
         return wrapper_pipeline
     global pipeline_exec
@@ -68,19 +61,17 @@ def pipeline(_func=None, *, stages: tuple):
         return result
 
 def job(_func=None, **kwargs):
-    stage = kwargs['stage'] if 'stage' in kwargs else ''
-    trace(f"Register job for stage '{stage}'")
-    def decorator(*args,**kwargs):
-        if len(args) > 0:
-            return args[0] # this is the original function
-        # else the decorator has been called as the original function
-        def wrapper(kwargs):
-            return func(kwargs)
+    trace("Register job")
+    def decorator(func):
+        def wrapper(*args,**kwargs):
+            return func(*args,**kwargs)
+        stage = kwargs['stage'] if 'stage' in kwargs else ''
+        register_func(pipeline_jobs, wrapper, stage)
         return wrapper
-
-    result = decorator if _func is None else _func
-    register_func(pipeline_jobs, result, stage)
-    return result
+    if _func is None:
+        return decorator
+    else:
+        return decorator(_func)
 
 def before_all(func):
     trace(f"Register before_all")
@@ -104,32 +95,29 @@ def after_all(func):
     register_func(pipeline_after_all, result)
     return result
 
-def before_each(_func=None, **kwargs):
-    stage = kwargs['stage'] if 'stage' in kwargs else ''
-    trace(f"Register before_each for stage '{stage}'")
-    def decorator(*args,**kwargs):
-        if len(args) > 0:
-            return args[0] # this is the original function
-        # else the decorator has been called as the original function
-        def wrapper(kwargs):
-            return func(kwargs)
-        return wrapper
 
-    result = decorator if _func is None else _func
-    register_func(pipeline_before_each, result, stage)
-    return result
+def before_each(_func=None, *args, **kwargs):
+    trace("Register before_each")
+    def decorator(func):
+        def wrapper(*args,**kwargs):
+            return func(*args,**kwargs)
+        stage = kwargs['stage'] if 'stage' in kwargs else ''
+        register_func(pipeline_before_each, wrapper, stage)
+        return wrapper
+    if _func is None:
+        return decorator
+    else:
+        return decorator(_func)
 
 def after_each(_func=None, **kwargs):
-    stage = kwargs['stage'] if 'stage' in kwargs else ''
-    trace(f"Register after_each for stage '{stage}'")
-    def decorator(*args,**kwargs):
-        if len(args) > 0:
-            return args[0] # this is the original function
-        # else the decorator has been called as the original function
-        def wrapper(kwargs):
-            return func(kwargs)
+    trace("Register after_each")
+    def decorator(func):
+        def wrapper(*args,**kwargs):
+            return func(*args,**kwargs)
+        stage = kwargs['stage'] if 'stage' in kwargs else ''
+        register_func(pipeline_after_each, wrapper, stage)
         return wrapper
-
-    result = decorator if _func is None else _func
-    register_func(pipeline_after_each, result, stage)
-    return result
+    if _func is None:
+        return decorator
+    else:
+        return decorator(_func)

@@ -69,7 +69,8 @@ def exit_job(*, env:dict = {}): # called after each jobs has been called during 
     info("performing... exit_job")
     pass
 
-
 ### demo
 if __name__ == "__main__":
+    warn("before calling pipeline")
     performMySuiteOfTests(env={'dir.current':'this/path', 'dir.basedir':'that/path'})
+    warn("after calling pipeline")
