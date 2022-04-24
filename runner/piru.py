@@ -1,6 +1,7 @@
 # PIpeline RUnner -- (c)2022 David SPORN
 # GPL3
 ########################################
+import copy
 from console.logger import trace, debug, info, ok
 
 pipeline_exec = None
@@ -33,9 +34,25 @@ def pipeline(_func=None, *, stages: tuple):
             debug(kwargs)
             result = func(kwargs)
             trace("call each before_all")
+            for befa in pipeline_before_all:
+                befa['func'](env=result)
             trace("for each stage...")
-            trace("  \\--filter jobs by stage and execute")
-            trace("call each after_all")
+            for stage in stages:
+                trace("  \\--filter jobs by stage and execute")
+                jobs = [j for j in pipeline_jobs if j['stage'] == stage or j['stage'] == '']
+                before_each = [j for j in pipeline_before_each if j['stage'] == stage or j['stage'] == '']
+                after_each = [j for j in pipeline_after_each if j['stage'] == stage or j['stage'] == '']
+                for job in jobs:
+                    env = copy.deepcopy(result)
+                    for befe in before_each:
+                        debug(befe)
+                        befe['func'](env=env)
+                    job['func'](env=env)
+                    for afte in after_each:
+                        afte['func'](env=env)
+            for afta in pipeline_after_all:
+                trace("call each after_all")
+                afta['func'](env=env)
             ok(f"End of pipeline {func.__name__}")
             return result
         return wrapper_pipeline
@@ -54,9 +71,10 @@ def job(_func=None, *, stage: str = ''):
     def decorator_job(func):
         def wrapper_job(*args, **kwargs):
             # before
-            func(args, kwargs)
+            # func(kwargs)
             # after
-        return wrapper_job
+            pass
+        return func
 
     if _func is None:
         result = decorator_job
@@ -71,9 +89,10 @@ def before_all(func):
     trace(f"Register before_all")
     def wrapper_before_all(* args, **kwargs):
         # before
-        func(args, kwargs)
+        # func(kwargs)
         # after
-    result = wrapper_before_all
+        pass
+    result = func
     register_func(pipeline_before_all, result)
     return result
 
@@ -81,19 +100,28 @@ def after_all(func):
     trace(f"Register after_all")
     def wrapper_after_all(* args, **kwargs):
         # before
-        func(args, kwargs)
+        # func(kwargs)
         # after
-    result = wrapper_after_all
-    register_func(pipeline_before_all, result)
+        pass
+    result = func
+    register_func(pipeline_after_all, result)
     return result
 
-def before_each(_func=None, *, stage: str = ''):
+def before_each(_func=None, **kwargs):
+    trace(kwargs)
+    raw_stage = kwargs['stage']
+    stage = {} if None == raw_stage else raw_stage
     trace(f"Register before_each for stage '{stage}'")
-    def decorator_before_each(func):
-        def wrapper_before_each(*args, **kwargs):
+    def decorator_before_each(*args,**kwargs):
+        debug(args)
+        debug(kwargs)
+        if len(args) > 0:
+            return args[0] # this is the function
+        def wrapper_before_each(kwargs):
             # before
-            func(args, kwargs)
+            return func(kwargs)
             # after
+            pass
         return wrapper_before_each
 
     if _func is None:
@@ -101,7 +129,7 @@ def before_each(_func=None, *, stage: str = ''):
         register_func(pipeline_before_each, result, stage)
         return result
     else:
-        result = decorator_before_each(_func)
+        result = _func
         register_func(pipeline_before_each, result, stage)
         return result
 
@@ -110,9 +138,10 @@ def after_each(_func=None, *, stage: str = ''):
     def decorator_after_each(func):
         def wrapper_after_each(*args, **kwargs):
             # before
-            func(args, kwargs)
+            # func(kwargs)
             # after
-        return wrapper_after_each
+            pass
+        return func
 
     if _func is None:
         result = decorator_after_each

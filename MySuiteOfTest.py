@@ -10,62 +10,62 @@ def performMySuiteOfTests(env:dict = {}):
 # A stage is constitued by @jobs for the matching stage,
 # in the order that they will be found while introspecting the class (no guaranteed order)
 @job(stage="first_stage")
-def B():
+def B(*, env:dict = {}):
     info("performing... B")
     pass
 
 @job(stage="first_stage")
-def A():
+def A(*, env:dict = {}):
     info("performing... A")
     pass
 
 @job(stage="second_stage")
-def C():
+def C(*, env:dict = {}):
     info("performing... C")
     pass
 
 @job(stage="second_stage")
-def F():
+def F(*, env:dict = {}):
     info("performing... F")
     pass
 
 @job(stage="third_stage")
-def E():
+def E(*, env:dict = {}):
     info("performing... E")
     pass
 
 @job(stage="second_stage")
-def D():
+def D(*, env:dict = {}):
     info("performing... D")
     pass
 
 @job(stage="third_stage")
-def G():
+def G(*, env:dict = {}):
     info("performing... G")
     pass
 
 @job()
-def H(): # performed at each stage
+def H(*, env:dict = {}): # performed at each stage
     info("performing... H")
     pass
 
 @before_all
-def setup():
+def setup(*, env:dict = {}):
     info("performing... setup")
     pass
 
 @after_all
-def teardown():
+def teardown(*, env:dict = {}):
     info("performing... teardown")
     pass
 
 @before_each(stage="first_stage")
-def enter_first_stage_job(): # called only before performing each job of a given stage
+def enter_first_stage_job(*, env:dict = {}): # called only before performing each job of a given stage
     info("performing... enter_first_stage_job")
     pass
 
 @after_each
-def exit_job(): # called after each jobs has been called during any stage.
+def exit_job(*, env:dict = {}): # called after each jobs has been called during any stage.
     info("performing... exit_job")
     pass
 
