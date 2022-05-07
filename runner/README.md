@@ -1,4 +1,4 @@
-# A task runner in python
+# PIRU.PY : A PIpeline RUnner for PYthon
 
 Inspired by :
 
