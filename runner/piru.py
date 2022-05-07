@@ -2,7 +2,10 @@
 # GPL3
 ########################################
 import copy
-from console.logger import trace, debug, info, ok, warn
+import logging
+
+# library logger
+LOGGER = logging.getLogger('pipeline_runner')
 
 pipeline_exec = None
 pipeline_jobs = []
@@ -16,7 +19,7 @@ def register_func(registry:list, func, stage:str=''):
         'func':func,
         'stage':stage
     }
-    trace(item)
+    LOGGER.debug(item)
     registry.append(item)
 #
 # Concepts :
@@ -24,16 +27,24 @@ def register_func(registry:list, func, stage:str=''):
 #
 # class annotation
 def pipeline(_func=None, *, stages: tuple):
-    trace(f"Register pipeline stages : {stages}")
+    """
+    The annotated function is the entry point to run the pipeline, and should
+    return a dictionnary with environment objects to be used throughout the pipeline.
+
+    It MUST be unique in the python application, in other words, the application is the pipeline.
+
+    The pipeline is defined by a sequence of 'stages', a stage is just a name to be targeted by jobs and job hooks.
+    """
+    LOGGER.debug(f"Register pipeline stages : {stages}")
     # TODO registers the sequence of stages
     def decorator_pipeline(func):
         def wrapper_pipeline(*args, **kwargs):
-            info(f"===[ START OF PIPELINE {func.__name__} ]===")
+            LOGGER.info(f"===[ START OF PIPELINE {func.__name__} ]===")
             result = func(*args, **kwargs)
             for befa in pipeline_before_all:
                 befa['func'](env=result)
             for stage in stages:
-                info(f"======[ START OF STAGE {stage} ]======")
+                LOGGER.info(f"======[ START OF STAGE {stage} ]======")
                 jobs = [j for j in pipeline_jobs if j['stage'] == stage or j['stage'] == '']
                 before_each = [j for j in pipeline_before_each if j['stage'] == stage or j['stage'] == '']
                 after_each = [j for j in pipeline_after_each if j['stage'] == stage or j['stage'] == '']
@@ -44,10 +55,10 @@ def pipeline(_func=None, *, stages: tuple):
                     job['func'](env=env)
                     for afte in after_each:
                         afte['func'](env=env)
-                ok(f"======[ END OF STAGE {stage} ]======")
+                LOGGER.info(f"======[ END OF STAGE {stage} ]======")
             for afta in pipeline_after_all:
                 afta['func'](env=env)
-            ok(f"===[ END OF PIPELINE {func.__name__} ]===")
+            LOGGER.info(f"===[ END OF PIPELINE {func.__name__} ]===")
             return result
         return wrapper_pipeline
     global pipeline_exec
@@ -61,7 +72,12 @@ def pipeline(_func=None, *, stages: tuple):
         return result
 
 def job(_func=None, **kwargs):
-    trace("Register job")
+    """
+    An actual job for the pipeline.
+
+    A job can be attached to a specific stage, otherwise it is performed at each stage.
+    """
+    LOGGER.debug("Register job")
     def decorator(func):
         def wrapper(*args,**kwargs):
             return func(*args,**kwargs)
@@ -74,7 +90,12 @@ def job(_func=None, **kwargs):
         return decorator(_func)
 
 def before_all(func):
-    trace(f"Register before_all")
+    """
+    The annotated function is called before any job of the pipeline is performed.
+
+    It is intended for setting up environment object that will be shared by all the jobs, e.g. a connection to a database.
+    """
+    LOGGER.debug(f"Register before_all")
     def wrapper_before_all(* args, **kwargs):
         # before
         # func(kwargs)
@@ -85,7 +106,12 @@ def before_all(func):
     return result
 
 def after_all(func):
-    trace(f"Register after_all")
+    """
+    The annotated function is called after all jobs of the pipeline have been performed.
+
+    It is intended for tearing down environment object shared by all the jobs, e.g. a connection to a database.
+    """
+    LOGGER.debug(f"Register after_all")
     def wrapper_after_all(* args, **kwargs):
         # before
         # func(kwargs)
@@ -97,7 +123,10 @@ def after_all(func):
 
 
 def before_each(_func=None, *args, **kwargs):
-    trace("Register before_each")
+    """
+    The annotated function is called before each job of the specified stage, or any jobs when no stage is specified.
+    """
+    LOGGER.debug("Register before_each")
     def decorator(func):
         def wrapper(*args,**kwargs):
             return func(*args,**kwargs)
@@ -110,7 +139,10 @@ def before_each(_func=None, *args, **kwargs):
         return decorator(_func)
 
 def after_each(_func=None, **kwargs):
-    trace("Register after_each")
+    """
+    The annotated function is called after each job of the specified stage, or any jobs when no stage is specified.
+    """
+    LOGGER.debug("Register after_each")
     def decorator(func):
         def wrapper(*args,**kwargs):
             return func(*args,**kwargs)
