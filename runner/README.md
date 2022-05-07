@@ -1,4 +1,4 @@
-# PIRU.PY : A PIpeline RUnner for PYthon
+# PIRUPY : A PIpeline RUnner for PYthon
 
 Inspired by :
 
