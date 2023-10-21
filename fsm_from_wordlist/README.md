@@ -6,6 +6,7 @@
 # items of the list of words = {word:string,tag:integer}
 # * word : the actual word to be recognized by the fsm
 # * tag : the strictly positive integer identifying the word. The same tag MAY be attached to different words seen as equivalent/synonyms/aliases.
+# NOTE : A word MAY be an illegal key, thus we don't use a dictionnary {word->tag}.
 fsm = fsmFromWordlist([
     {word:"foo",tag:1},
     {word:"bar",tag:2}
