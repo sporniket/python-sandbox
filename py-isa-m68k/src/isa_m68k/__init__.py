@@ -19,5 +19,6 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
-from assembly import AssemblyCli
+from .assembly import AssemblyCli
+
 __all__ = ["AssemblyCli"]
