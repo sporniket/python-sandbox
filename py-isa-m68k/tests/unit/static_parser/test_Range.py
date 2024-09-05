@@ -27,10 +27,12 @@ def test_Range_has_expected_properties():
     dummy = Range()
     assert dummy.offset == 0
     assert dummy.length == 0
+    assert dummy.end == 0
 
     dummy = Range(1, 5)
     assert dummy.offset == 1
     assert dummy.length == 5
+    assert dummy.end == 6
 
     with pytest.raises(ValueError) as error:
         Range(-1)
