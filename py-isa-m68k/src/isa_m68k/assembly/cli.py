@@ -2,7 +2,7 @@
 ---
 (c) 2024 David SPORN
 ---
-This is part of py-isa-m68k -- whatever.
+This is part of py-isa-m68k -- Toolbox for the Motorola 68k Instruction Set Architecture.
 
 py-isa-m68k is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published by the
