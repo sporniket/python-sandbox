@@ -19,6 +19,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
+import pytest
 from isa_m68k.assembly.static_parser import Range
 
 
@@ -31,6 +32,28 @@ def test_Range_has_expected_properties():
     assert dummy.offset == 1
     assert dummy.length == 5
 
+    with pytest.raises(ValueError) as error:
+        Range(-1)
+    assert "invalid.must.be.positive.or.zero:offset" in error.value.args
+    assert len(error.value.args) == 1
+
+    with pytest.raises(ValueError) as error:
+        Range(0, -1)
+    assert "invalid.must.be.positive.or.zero:length" in error.value.args
+    assert len(error.value.args) == 1
+
+    with pytest.raises(ValueError) as error:
+        Range(-1, -1)
+    assert "invalid.must.be.positive.or.zero:offset" in error.value.args
+    assert "invalid.must.be.positive.or.zero:length" in error.value.args
+    assert len(error.value.args) == 2
+
+
+def test_Range_isEmpty_works_as_expected():
+    a, b = Range(0, 0), Range(0, 1)
+    assert a.isEmpty()
+    assert not b.isEmpty()
+
 
 def test_Range_isBefore_is_an_ordering_relation():
     (a, b, c) = (Range(9), Range(10), Range(11))
@@ -42,6 +65,8 @@ def test_Range_isBefore_is_an_ordering_relation():
     assert not b.isBefore(a)
     # isBefore is reflexive
     assert b.isBefore(b)
+    # never before null
+    assert not b.isBefore(None)
 
 
 def test_Range_isSmaller_is_an_ordering_relation():
@@ -54,3 +79,5 @@ def test_Range_isSmaller_is_an_ordering_relation():
     assert not b.isSmaller(a)
     # isSmaller is reflexive
     assert b.isSmaller(b)
+    # is not smaller than None
+    assert not b.isSmaller(None)

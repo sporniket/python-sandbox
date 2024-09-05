@@ -36,7 +36,7 @@ class Range:
             errors += ["invalid.must.be.positive.or.zero:length"]
         if len(errors) > 0:
             listBody = ",".join(errors)
-            raise ValueError(f"[{listBody}]")
+            raise ValueError(*errors)
         self._offset = offset
         self._length = length
 
