@@ -1,7 +1,7 @@
 [project]
 name = "isa-m68k-by-sporniket"
 version = "0.0.1"
-description = "Library for the Motorola 68k Instruction Set Architecture"
+description = "Toolbox for the Motorola 68k Instruction Set Architecture"
 authors = [
     {name = "Sporniket", email = "sporniket.studio@gmail.com"},
 ]
@@ -19,7 +19,7 @@ bug-tracker = "https://github.com/sporniket/py-isa-m68k/issues"
 
 
 [project.scripts]
-m68k_as = "m68k.as.__main__:main"
+isa_m68k_as = "isa_m68k.assembly.__main__:main"
 
 
 [build-system]
