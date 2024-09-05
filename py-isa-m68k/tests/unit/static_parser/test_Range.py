@@ -50,7 +50,7 @@ def test_Range_has_expected_properties():
 
 
 def test_Range_isEmpty_works_as_expected():
-    a, b = Range(0, 0), Range(0, 1)
+    (a, b) = (Range(0, 0), Range(0, 1))
     assert a.isEmpty()
     assert not b.isEmpty()
 
@@ -65,7 +65,7 @@ def test_Range_isBefore_is_an_ordering_relation():
     assert not b.isBefore(a)
     # isBefore is reflexive
     assert b.isBefore(b)
-    # never before null
+    # is never before null
     assert not b.isBefore(None)
 
 
@@ -81,3 +81,46 @@ def test_Range_isSmaller_is_an_ordering_relation():
     assert b.isSmaller(b)
     # is not smaller than None
     assert not b.isSmaller(None)
+
+
+def test_Range_isEndingBefore_is_an_ordering_relation():
+    (a, b, c) = (Range(9, 10), Range(10, 10), Range(11, 10))
+    # isEndingBefore is transitive
+    assert a.isEndingBefore(b)
+    assert b.isEndingBefore(c)
+    assert a.isEndingBefore(c)
+    # isEndingBefore is anti symetrical
+    assert not b.isEndingBefore(a)
+    # isEndingBefore is reflexive
+    assert b.isEndingBefore(b)
+    # is not ending before None
+    assert not b.isEndingBefore(None)
+
+
+def test_Range_isOutside_works_as_expected():
+    a, b, c = Range(5, 10), Range(15, 10), Range(3, 15)
+    assert a.isOutside(b)
+    assert not a.isOutside(c)
+    assert b.isOutside(a)
+    assert not b.isOutside(c)
+    assert not c.isOutside(a)
+    assert not c.isOutside(b)
+
+
+def test_Range_isInside_is_an_ordering_relation():
+    (a, b, c) = (Range(9, 2), Range(8, 4), Range(7, 6))
+    # isInside is transitive
+    assert a.isInside(b)
+    assert b.isInside(c)
+    assert a.isInside(c)
+    # isInside is anti symetrical
+    assert not b.isInside(a)
+    # isInside is reflexive
+    assert b.isInside(b)
+    # is not inside None
+    assert not b.isInside(None)
+    # other things
+    assert not a.isInside(Range(7, 2))
+    assert not a.isInside(Range(8, 2))
+    assert not a.isInside(Range(10, 2))
+    assert not a.isInside(Range(11, 2))
