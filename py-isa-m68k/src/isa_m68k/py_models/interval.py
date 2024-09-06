@@ -27,6 +27,15 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 
 class Interval:
+    """Interval defined with integers."""
+    ### TODO : work with numbers too --> given i an interval and j a number (int or float) :
+    ### * i.isBefore(j) returns True if i.end <= j
+    ### * i.isEndingBefore(j) returns True if i.end <= j
+    ###
+    ### * i.__contains__(j)
+    ###   * j a number --> returns True if i.start <= j and j < i.end --> delegate
+    ###   * j an interval --> returns j.isInside(i)
+
     def __init__(self, start: int = 0, *, length: int = None, end: int = None):
         """An interval is defined by its start value and either its end, or its length"""
         # sanity checks
