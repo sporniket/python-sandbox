@@ -23,7 +23,7 @@ import pytest
 from isa_m68k.py_models import Interval
 
 
-def test_Interval_has_expected_properties():
+def test__Interval__has_expected_properties():
     # Legal instanciations
     a, b, c = Interval(length=0), Interval(1, length=5), Interval(1, end=6)
     assert a.start == 0
@@ -42,7 +42,7 @@ def test_Interval_has_expected_properties():
     assert len(c) == 5
 
 
-def test_Interval_forbids_illegal_instanciations():
+def test__Interval__forbids_illegal_instanciations():
     # Each type of error
     with pytest.raises(ValueError) as error:
         Interval(-1, length=0)
@@ -91,13 +91,13 @@ def test_Interval_forbids_illegal_instanciations():
     assert len(error.value.args) == 4
 
 
-def test_Interval_isEmpty_works_as_expected():
+def test__Interval_isEmpty__works_as_expected():
     (a, b) = (Interval(0, length=0), Interval(0, length=1))
     assert a.isEmpty()
     assert not b.isEmpty()
 
 
-def test_Interval_isBefore_is_an_ordering_relation():
+def test__Interval_isBefore__is_an_ordering_relation():
     (a, b, c) = (Interval(9, length=0), Interval(10, length=0), Interval(11, length=0))
     # isBefore is transitive
     assert a.isBefore(b)
@@ -111,7 +111,7 @@ def test_Interval_isBefore_is_an_ordering_relation():
     assert not b.isBefore(None)
 
 
-def test_Interval_isSmaller_is_an_ordering_relation():
+def test__Interval_isSmaller__is_an_ordering_relation():
     (a, b, c) = (Interval(0, length=9), Interval(0, length=10), Interval(0, length=11))
     # isSmaller is transitive
     assert a.isSmaller(b)
@@ -125,7 +125,7 @@ def test_Interval_isSmaller_is_an_ordering_relation():
     assert not b.isSmaller(None)
 
 
-def test_Interval_isEndingBefore_is_an_ordering_relation():
+def test__Interval_isEndingBefore__is_an_ordering_relation():
     (a, b, c) = (
         Interval(9, length=10),
         Interval(10, length=10),
@@ -143,7 +143,7 @@ def test_Interval_isEndingBefore_is_an_ordering_relation():
     assert not b.isEndingBefore(None)
 
 
-def test_Interval_isOutside_works_as_expected():
+def test__Interval_isOutside__works_as_expected():
     a, b, c = Interval(5, length=10), Interval(15, length=10), Interval(3, length=15)
     assert a.isOutside(b)
     assert not a.isOutside(c)
@@ -153,7 +153,7 @@ def test_Interval_isOutside_works_as_expected():
     assert not c.isOutside(b)
 
 
-def test_Interval_isInside_is_an_ordering_relation():
+def test__Interval_isInside__is_an_ordering_relation():
     (a, b, c) = (Interval(9, length=2), Interval(8, length=4), Interval(7, length=6))
     # isInside is transitive
     assert a.isInside(b)
