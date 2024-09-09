@@ -28,6 +28,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 class Interval:
     """Interval defined with integers."""
+
     ### TODO : work with numbers too --> given i an interval and j a number (int or float) :
     ### * i.isBefore(j) returns True if i.end <= j
     ### * i.isEndingBefore(j) returns True if i.end <= j
