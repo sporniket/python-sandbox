@@ -31,22 +31,39 @@ from typing import Optional
 class NodeRT:
     """Node of a Rooted Tree"""
 
+    def __init__(
+        self,
+        *,
+        parent: "NodeRT" = None,
+        previous: "NodeRT" = None,
+        next: "NodeRT" = None,
+        children: list["NodeRT"] = []
+    ):
+        if parent:
+            self._parent = parent
+        if previous:
+            self._previous = previous
+        if next:
+            self._next = next
+        if children:
+            self._children = [x for x in children]
+
     # ========[ properties ]========
     @property
     def parent(self) -> Optional["NodeRT"]:
-        pass
+        return self._parent
 
     @property
     def children(self) -> list["NodeRT"]:
-        pass
+        return self._children
 
     @property
     def previous(self) -> Optional["NodeRT"]:
-        pass
+        return self._previous
 
     @property
     def next(self) -> Optional["NodeRT"]:
-        pass
+        return self._next
 
     # ========[ predicates ]========
     # -- self predicates

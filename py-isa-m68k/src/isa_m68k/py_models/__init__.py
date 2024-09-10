@@ -23,5 +23,6 @@ If not, see <https://www.gnu.org/licenses/>. 
 """
 
 from .interval import Interval
+from .graph_tree_rooted import NodeRT
 
-__all__ = ["Interval"]
+__all__ = ["Interval", "NodeRT"]
