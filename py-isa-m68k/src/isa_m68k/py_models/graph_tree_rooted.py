@@ -27,6 +27,11 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from typing import Optional
 
+### TODO -- 2024-09-12
+# better linking management :
+# * when instanciating with sibling, verify that all the sibling may be reordered into the children of the SAME parent.
+# * stronger enforcing of family bonds on instanciation in general, with raising errors when impossible
+# * At some point there is so much that a node can do to its related nodes, maybe devise a management system.
 
 class NodeRT:
     """Node of a Rooted Tree"""
