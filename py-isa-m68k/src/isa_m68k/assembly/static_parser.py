@@ -22,26 +22,15 @@ If not, see <https://www.gnu.org/licenses/>. 
 from enum import Enum
 from typing import List
 
-TypeOfNode = Enum(
-    "TypeOfNode", ["SOURCE_FILE", "LINE__COMMENT", "LINE_EMPTY", "LINE_STATEMENT"]
+TypeOfFragment = Enum(
+    "TypeOfFragment", ["SOURCE_FILE", "LINE__COMMENT", "LINE_EMPTY", "LINE_STATEMENT"]
 )
 
 
-class Node:
-    def __init__(
-        self,
-        range: Range,
-        *,
-        tag: any = None,
-        args: list = [],
-        parent: "Node" = None,
-        previous: "Node" = None,
-        next: "Node" = None
-    ):
-        self._range = range
-        self._tag = tag
-        self._args = args
-        self._parent = parent
-        self._previous = previous
-        self._next = next
-        self._children = []
+# FragmentOfCode
+# {
+#     NodeRT node : relationships between fragment
+#     Interval range : location of the fragment
+#     any type : tag for processing
+#     dict[any] args : any relevant supplemental data
+# }
