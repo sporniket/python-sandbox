@@ -77,6 +77,8 @@ def test__NodeRT_isAncestorOf__is_a_strict_ordering_relation():
     assert b.isAncestorOf(c)
     # Anti-Reflexive
     assert not a.isAncestorOf(a)
+    assert not b.isAncestorOf(b)
+    assert not c.isAncestorOf(c)
     # Anti-symetric
     assert not b.isAncestorOf(a)
     # Transitive
@@ -92,7 +94,43 @@ def test__NodeRT_isDescendantOf__is_a_strict_ordering_relation():
     assert b.isDescendantOf(a)
     # Anti-Reflexive
     assert not a.isDescendantOf(a)
+    assert not b.isDescendantOf(b)
+    assert not c.isDescendantOf(c)
     # Anti-symetric
     assert not a.isDescendantOf(b)
     # Transitive
     assert c.isDescendantOf(a)
+
+
+def test__NodeRT_isOlderSiblingOf__is_a_strict_ordering_relation():
+    a = NodeRT()
+    b = NodeRT(next=a)
+    c = NodeRT(next=b)
+
+    assert c.isOlderSiblingOf(b)
+    assert b.isOlderSiblingOf(a)
+    # Anti-Reflexive
+    assert not a.isOlderSiblingOf(a)
+    assert not b.isOlderSiblingOf(b)
+    assert not c.isOlderSiblingOf(c)
+    # Anti-symetric
+    assert not a.isOlderSiblingOf(b)
+    # Transitive
+    assert c.isOlderSiblingOf(a)
+
+
+def test__NodeRT_isYoungerSiblingOf__is_a_strict_ordering_relation():
+    a = NodeRT()
+    b = NodeRT(previous=a)
+    c = NodeRT(previous=b)
+
+    assert c.isYoungerSiblingOf(b)
+    assert b.isYoungerSiblingOf(a)
+    # Anti-Reflexive
+    assert not a.isYoungerSiblingOf(a)
+    assert not b.isYoungerSiblingOf(b)
+    assert not c.isYoungerSiblingOf(c)
+    # Anti-symetric
+    assert not a.isYoungerSiblingOf(b)
+    # Transitive
+    assert c.isYoungerSiblingOf(a)
