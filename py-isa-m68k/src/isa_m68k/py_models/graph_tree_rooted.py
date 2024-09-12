@@ -39,14 +39,23 @@ class NodeRT:
         next: "NodeRT" = None,
         children: list["NodeRT"] = []
     ):
+        self._parent = parent
         if parent:
-            self._parent = parent
+            parent._addChild(self)
+
+        self._previous = previous
         if previous:
-            self._previous = previous
+            previous._setNextSibling(self)
+
+        self._next = next
         if next:
-            self._next = next
+            next._setPreviousSibling(self)
+
+        self._children = []
         if children:
-            self._children = [x for x in children]
+            self._children += [x for x in children]
+            for c in self._children:
+                c._setParent(self)
 
     # ========[ properties ]========
     @property
@@ -63,7 +72,7 @@ class NodeRT:
 
     @property
     def next(self) -> Optional["NodeRT"]:
-        return self._next
+        return self._next if self._next else None
 
     # ========[ predicates ]========
     # -- self predicates
@@ -80,7 +89,7 @@ class NodeRT:
         return False if self.next else True
 
     # -- relations
-    def isAncestorOrSelfOf(self, x: "NodeRT") -> bool:
+    def isAncestorOf(self, x: "NodeRT") -> bool:
         """Strict ordering relation"""
         current = x
         while current.parent:
@@ -99,6 +108,7 @@ class NodeRT:
         return False
 
     def isSiblingOf(self, x: "NodeRT") -> bool:
+        """Equivalence relation"""
         return x.parent is self.parent
 
     def isOlderSiblingOf(self, x: "NodeRT") -> bool:
@@ -124,6 +134,25 @@ class NodeRT:
         return False
 
     # ========[ graph management ]========
-    # TODO : attach/detach child
+    #
+    def _addChild(self, child: "NodeRT"):
+        """Add the designated node to the list of children"""
+        if child not in self._children:
+            self._children.append(child)
+
+    def _setNextSibling(self, sibling: "NodeRT"):
+        """Set the designated node as the next sibling"""
+        if not self._next or self._next is not sibling:
+            self._next = sibling
+
+    def _setPreviousSibling(self, sibling: "NodeRT"):
+        """Set the designated node as the next sibling"""
+        if self._previous is not sibling:
+            self._previous = sibling
+
+    def _setParent(self, parent: "NodeRT"):
+        """Set the designated node as the parent"""
+        if self._parent is not parent:
+            self._parent = parent
 
     # ========[ others ]========

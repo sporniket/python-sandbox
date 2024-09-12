@@ -50,5 +50,49 @@ def test__NodeRT__has_expected_properties():
     assert a is youngerSibling.previous
     assert a is child1.parent
     assert a is child2.parent
-    assert parent is olderSibling.parent
-    assert parent is youngerSibling.parent
+    # -- Does not resolves parenting when binding siblings
+    assert olderSibling.parent is None
+    assert youngerSibling.parent is None
+    assert olderSibling not in parent.children
+    assert youngerSibling not in parent.children
+
+    # Predicates
+    assert not a.isRoot()
+    assert parent.isRoot()
+    assert not a.isLeaf()
+    assert child1.isLeaf()
+    assert not a.isFirstChild()
+    assert not a.isLastChild()
+    # -- child order has not been setup for child1/child2
+    assert child1.isFirstChild()
+    assert child1.isLastChild()
+
+
+def test__NodeRT_isAncestorOf__is_a_strict_ordering_relation():
+    a = NodeRT()
+    b = NodeRT(parent=a)
+    c = NodeRT(parent=b)
+
+    assert a.isAncestorOf(b)
+    assert b.isAncestorOf(c)
+    # Anti-Reflexive
+    assert not a.isAncestorOf(a)
+    # Anti-symetric
+    assert not b.isAncestorOf(a)
+    # Transitive
+    assert a.isAncestorOf(c)
+
+
+def test__NodeRT_isDescendantOf__is_a_strict_ordering_relation():
+    a = NodeRT()
+    b = NodeRT(parent=a)
+    c = NodeRT(parent=b)
+
+    assert c.isDescendantOf(b)
+    assert b.isDescendantOf(a)
+    # Anti-Reflexive
+    assert not a.isDescendantOf(a)
+    # Anti-symetric
+    assert not a.isDescendantOf(b)
+    # Transitive
+    assert c.isDescendantOf(a)
