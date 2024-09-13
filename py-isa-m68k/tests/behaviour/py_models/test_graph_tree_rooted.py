@@ -78,13 +78,15 @@ def test__NodeRT__rejects_list_of_children_with_duplicates():
 
     with pytest.raises(ValueError) as error:
         NodeRT(children=[child, child])
-    assert "child.already.in.list" in error.value.args
-    assert len(error.value.args) == 1
+    assert "child.already.in.list" == error.value.args[0]
+    assert 1 == error.value.args[1]
+    assert len(error.value.args) == 2
 
     with pytest.raises(ValueError) as error:
         NodeRT().adopt([child, child])
-    assert "child.already.in.list" in error.value.args
-    assert len(error.value.args) == 1
+    assert "child.already.in.list" == error.value.args[0]
+    assert 1 == error.value.args[1]
+    assert len(error.value.args) == 2
 
 
 def test__NodeRT__rejects_list_of_children_that_contains_ancestors():
@@ -93,23 +95,27 @@ def test__NodeRT__rejects_list_of_children_that_contains_ancestors():
 
     with pytest.raises(ValueError) as error:
         NodeRT(parent=parent, children=[parent])
-    assert "child.is.ancestor" in error.value.args
-    assert len(error.value.args) == 1
+    assert "child.is.ancestor" == error.value.args[0]
+    assert 0 == error.value.args[1]
+    assert len(error.value.args) == 2
 
     with pytest.raises(ValueError) as error:
         NodeRT(parent=parent, children=[grandParent])
-    assert "child.is.ancestor" in error.value.args
-    assert len(error.value.args) == 1
+    assert "child.is.ancestor" == error.value.args[0]
+    assert 0 == error.value.args[1]
+    assert len(error.value.args) == 2
 
     with pytest.raises(ValueError) as error:
         NodeRT(parent=parent).adopt([parent])
-    assert "child.is.ancestor" in error.value.args
-    assert len(error.value.args) == 1
+    assert "child.is.ancestor" == error.value.args[0]
+    assert 0 == error.value.args[1]
+    assert len(error.value.args) == 2
 
     with pytest.raises(ValueError) as error:
         NodeRT(parent=parent).adopt([grandParent])
-    assert "child.is.ancestor" in error.value.args
-    assert len(error.value.args) == 1
+    assert "child.is.ancestor" == error.value.args[0]
+    assert 0 == error.value.args[1]
+    assert len(error.value.args) == 2
 
 
 def test__NodeRT_isAncestorOf__is_a_strict_ordering_relation():

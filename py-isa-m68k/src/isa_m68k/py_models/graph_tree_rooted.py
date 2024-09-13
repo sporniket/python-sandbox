@@ -126,7 +126,11 @@ class NodeRT:
     #
     def adopt(self, children: list["NodeRT"]):
         for i, c in enumerate(children):
-            self._addChild(c)
+            try:
+                self._addChild(c)
+            except ValueError as error:
+                error.args += (i,)
+                raise error
 
     def _addChild(self, child: "NodeRT"):
         """Add the designated node to the list of children"""
