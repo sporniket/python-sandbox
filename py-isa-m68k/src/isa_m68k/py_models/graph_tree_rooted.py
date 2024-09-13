@@ -27,40 +27,24 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from typing import Optional
 
-### TODO -- 2024-09-12
-# better linking management :
-# * when instanciating with sibling, verify that all the sibling may be reordered into the children of the SAME parent.
-# * stronger enforcing of family bonds on instanciation in general, with raising errors when impossible
-# * At some point there is so much that a node can do to its related nodes, maybe devise a management system.
 
 class NodeRT:
     """Node of a Rooted Tree"""
 
-    def __init__(
-        self,
-        *,
-        parent: "NodeRT" = None,
-        previous: "NodeRT" = None,
-        next: "NodeRT" = None,
-        children: list["NodeRT"] = []
-    ):
+    def __init__(self, *, parent: "NodeRT" = None, children: list["NodeRT"] = []):
+        # declare fields
+        self._previous = None
+        self._next = None
+        self._children = []
+
+        # start linking
         self._parent = parent
         if parent:
             parent._addChild(self)
 
-        self._previous = previous
-        if previous:
-            previous._setNextSibling(self)
-
-        self._next = next
-        if next:
-            next._setPreviousSibling(self)
-
         self._children = []
         if children:
-            self._children += [x for x in children]
-            for c in self._children:
-                c._setParent(self)
+            self.adopt(children)
 
     # ========[ properties ]========
     @property
@@ -140,14 +124,42 @@ class NodeRT:
 
     # ========[ graph management ]========
     #
+    def adopt(self, children: list["NodeRT"]):
+        for i, c in enumerate(children):
+            self._addChild(c)
+
     def _addChild(self, child: "NodeRT"):
         """Add the designated node to the list of children"""
         if child not in self._children:
+            if child.isAncestorOf(self):
+                raise ValueError("child.is.ancestor")
+            if child.parent and child.parent is not self:
+                child.parent._removeChild(child)
+            elif not child.parent:
+                child._setParent(self)
+            lastChild = self._children[-1] if self._children else None
             self._children.append(child)
+            if lastChild:
+                lastChild._setNextSibling(child)
+                child._setPreviousSibling(lastChild)
+        else:
+            raise ValueError("child.already.in.list")
+
+    def _removeChild(self, child: "NodeRT"):
+        """Remove the designated node from the list of children and cut ties"""
+        if child in self._children:
+            self._children.remove(child)
+            if child.previous:
+                child.previous._setNextSibling(child.next)
+            elif child.next:
+                child.next._setPreviousSibling(child.previous)
+            child._setNextSibling(None)
+            child._setPreviousSibling(None)
+            child._setParent(None)
 
     def _setNextSibling(self, sibling: "NodeRT"):
         """Set the designated node as the next sibling"""
-        if not self._next or self._next is not sibling:
+        if self._next is not sibling:
             self._next = sibling
 
     def _setPreviousSibling(self, sibling: "NodeRT"):

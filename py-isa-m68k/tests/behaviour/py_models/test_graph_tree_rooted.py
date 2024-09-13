@@ -19,23 +19,22 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
+import pytest
+
 from isa_m68k.py_models import NodeRT
 
 
 def test__NodeRT__has_expected_properties():
-    parent, olderSibling, youngerSibling, child1, child2 = (
-        NodeRT(),
+    olderSibling, youngerSibling, child1, child2 = (
         NodeRT(),
         NodeRT(),
         NodeRT(),
         NodeRT(),
     )
     a = NodeRT(
-        parent=parent,
-        previous=olderSibling,
-        next=youngerSibling,
         children=[child1, child2],
     )
+    parent = NodeRT(children=[olderSibling, a, youngerSibling])
 
     assert a.parent is parent
     assert a.previous is olderSibling
@@ -50,11 +49,12 @@ def test__NodeRT__has_expected_properties():
     assert a is youngerSibling.previous
     assert a is child1.parent
     assert a is child2.parent
-    # -- Does not resolves parenting when binding siblings
-    assert olderSibling.parent is None
-    assert youngerSibling.parent is None
-    assert olderSibling not in parent.children
-    assert youngerSibling not in parent.children
+    assert child2 is child1.next
+    assert child1 is child2.previous
+    assert parent is olderSibling.parent
+    assert parent is youngerSibling.parent
+    assert olderSibling in parent.children
+    assert youngerSibling in parent.children
 
     # Predicates
     assert not a.isRoot()
@@ -63,9 +63,53 @@ def test__NodeRT__has_expected_properties():
     assert child1.isLeaf()
     assert not a.isFirstChild()
     assert not a.isLastChild()
-    # -- child order has not been setup for child1/child2
     assert child1.isFirstChild()
-    assert child1.isLastChild()
+    assert not child1.isLastChild()
+    assert not child2.isFirstChild()
+    assert child2.isLastChild()
+    assert olderSibling.isFirstChild()
+    assert not olderSibling.isLastChild()
+    assert not youngerSibling.isFirstChild()
+    assert youngerSibling.isLastChild()
+
+
+def test__NodeRT__rejects_list_of_children_with_duplicates():
+    child = NodeRT()
+
+    with pytest.raises(ValueError) as error:
+        NodeRT(children=[child, child])
+    assert "child.already.in.list" in error.value.args
+    assert len(error.value.args) == 1
+
+    with pytest.raises(ValueError) as error:
+        NodeRT().adopt([child, child])
+    assert "child.already.in.list" in error.value.args
+    assert len(error.value.args) == 1
+
+
+def test__NodeRT__rejects_list_of_children_that_contains_ancestors():
+    grandParent = NodeRT()
+    parent = NodeRT(parent=grandParent)
+
+    with pytest.raises(ValueError) as error:
+        NodeRT(parent=parent, children=[parent])
+    assert "child.is.ancestor" in error.value.args
+    assert len(error.value.args) == 1
+
+    with pytest.raises(ValueError) as error:
+        NodeRT(parent=parent, children=[grandParent])
+    assert "child.is.ancestor" in error.value.args
+    assert len(error.value.args) == 1
+
+    with pytest.raises(ValueError) as error:
+        NodeRT(parent=parent).adopt([parent])
+    assert "child.is.ancestor" in error.value.args
+    assert len(error.value.args) == 1
+
+    with pytest.raises(ValueError) as error:
+        NodeRT(parent=parent).adopt([grandParent])
+    assert "child.is.ancestor" in error.value.args
+    assert len(error.value.args) == 1
 
 
 def test__NodeRT_isAncestorOf__is_a_strict_ordering_relation():
@@ -103,9 +147,8 @@ def test__NodeRT_isDescendantOf__is_a_strict_ordering_relation():
 
 
 def test__NodeRT_isOlderSiblingOf__is_a_strict_ordering_relation():
-    a = NodeRT()
-    b = NodeRT(next=a)
-    c = NodeRT(next=b)
+    a, b, c = NodeRT(), NodeRT(), NodeRT()
+    NodeRT(children=[c, b, a])
 
     assert c.isOlderSiblingOf(b)
     assert b.isOlderSiblingOf(a)
@@ -120,9 +163,8 @@ def test__NodeRT_isOlderSiblingOf__is_a_strict_ordering_relation():
 
 
 def test__NodeRT_isYoungerSiblingOf__is_a_strict_ordering_relation():
-    a = NodeRT()
-    b = NodeRT(previous=a)
-    c = NodeRT(previous=b)
+    a, b, c = NodeRT(), NodeRT(), NodeRT()
+    NodeRT(children=[a, b, c])
 
     assert c.isYoungerSiblingOf(b)
     assert b.isYoungerSiblingOf(a)
