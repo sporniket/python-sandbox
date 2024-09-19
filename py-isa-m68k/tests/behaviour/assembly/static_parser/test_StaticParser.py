@@ -19,7 +19,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
-from isa_m68k.assembly.static_parser import StaticParser, FragmentOfCode
+from isa_m68k.assembly.static_parser import StaticParser, FragmentOfCode, TypeOfFragment
 
 
 def thenFragmentHasExpectedRange(fragment: FragmentOfCode, start, length):
@@ -27,8 +27,8 @@ def thenFragmentHasExpectedRange(fragment: FragmentOfCode, start, length):
     assert fragment.range.length == length
 
 
-def test__StaticParser_parse__ignores_empty_lines():
-    fragments = StaticParser().parse(
+def test__StaticParser_parseSource__ignores_empty_lines():
+    fragments = StaticParser().parseSource(
         """** 
 * A minimal program for Atari ST.
 *
@@ -40,6 +40,22 @@ def test__StaticParser_parse__ignores_empty_lines():
     )
 
     assert len(fragments) == 7
+
+    root = fragments[0].parent
+    assert root.type == TypeOfFragment.SOURCE_FILE
+    assert root is not None
+    for i, f in enumerate(fragments):
+        assert root is f.parent
+        assert root.children[i] is f
+
+    assert fragments[0].type == TypeOfFragment.LINE__COMMENT
+    assert fragments[1].type == TypeOfFragment.LINE__COMMENT
+    assert fragments[2].type == TypeOfFragment.LINE__COMMENT
+    assert fragments[3].type == TypeOfFragment.LINE__COMMENT
+    assert fragments[4].type == TypeOfFragment.LINE__COMMENT
+    assert fragments[5].type == TypeOfFragment.LINE__STATEMENT
+    assert fragments[6].type == TypeOfFragment.LINE__STATEMENT
+
     thenFragmentHasExpectedRange(fragments[0], 0, 2)
     thenFragmentHasExpectedRange(fragments[1], 4, 33)
     thenFragmentHasExpectedRange(fragments[2], 38, 1)

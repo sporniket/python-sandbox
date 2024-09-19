@@ -24,9 +24,11 @@ from typing import List
 from ..py_models import Interval, NodeRT
 
 TypeOfFragment = Enum(
-    "TypeOfFragment", ["SOURCE_FILE", "LINE__COMMENT", "LINE_EMPTY", "LINE_STATEMENT"]
+    "TypeOfFragment", ["SOURCE_FILE", "LINE__COMMENT", "LINE__STATEMENT"]
 )
 
+
+MARK_OF_COMMENT_LINE = ["*", ";"]
 
 # FragmentOfCode
 # {
@@ -38,13 +40,13 @@ TypeOfFragment = Enum(
 
 
 # TODO : FragmentOfCode IS an NodeRT
-class FragmentOfCode:
+class FragmentOfCode(NodeRT):
     def __init__(
         self, type: TypeOfFragment, range: Interval, *, parent: NodeRT = None, **kwargs
     ):
+        super().__init__(parent=parent)
         self._type = type
         self._range = range
-        self._node = NodeRT(parent=parent)
         self._args = kwargs
 
     @property
@@ -64,9 +66,8 @@ class StaticParser:
     def __init__(self):
         pass
 
-    def parse(self, charStream: str) -> list[FragmentOfCode]:
+    def parseSource(self, charStream: str) -> list[FragmentOfCode]:
         sizeOfStream = len(charStream)
-        root = NodeRT()
         rootFragment = FragmentOfCode(
             TypeOfFragment.SOURCE_FILE, Interval(0, length=sizeOfStream)
         )
@@ -77,8 +78,15 @@ class StaticParser:
             sizeOfLine = len(line)
             if sizeOfLine > 0:
                 range = Interval(mark, length=sizeOfLine)
+                firstChar = charStream[mark]
                 fragment = FragmentOfCode(
-                    TypeOfFragment.LINE_STATEMENT, range, parent=root
+                    (
+                        TypeOfFragment.LINE__COMMENT
+                        if firstChar in MARK_OF_COMMENT_LINE
+                        else TypeOfFragment.LINE__STATEMENT
+                    ),
+                    range,
+                    parent=rootFragment,
                 )
                 result.append(fragment)
 
