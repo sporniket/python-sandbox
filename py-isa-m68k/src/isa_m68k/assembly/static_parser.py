@@ -21,6 +21,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from enum import Enum
 from typing import List
+from ..py_models import Interval, NodeRT
 
 TypeOfFragment = Enum(
     "TypeOfFragment", ["SOURCE_FILE", "LINE__COMMENT", "LINE_EMPTY", "LINE_STATEMENT"]
@@ -34,3 +35,62 @@ TypeOfFragment = Enum(
 #     any type : tag for processing
 #     dict[any] args : any relevant supplemental data
 # }
+
+
+# TODO : FragmentOfCode IS an NodeRT
+class FragmentOfCode:
+    def __init__(
+        self, type: TypeOfFragment, range: Interval, *, parent: NodeRT = None, **kwargs
+    ):
+        self._type = type
+        self._range = range
+        self._node = NodeRT(parent=parent)
+        self._args = kwargs
+
+    @property
+    def type(self) -> TypeOfFragment:
+        return self._type
+
+    @property
+    def range(self) -> Interval:
+        return self._range
+
+    @property
+    def args(self) -> dict:
+        return self._args
+
+
+class StaticParser:
+    def __init__(self):
+        pass
+
+    def parse(self, charStream: str) -> list[FragmentOfCode]:
+        sizeOfStream = len(charStream)
+        root = NodeRT()
+        rootFragment = FragmentOfCode(
+            TypeOfFragment.SOURCE_FILE, Interval(0, length=sizeOfStream)
+        )
+        result = []
+        mark = 0
+
+        def processLine(line):
+            sizeOfLine = len(line)
+            if sizeOfLine > 0:
+                range = Interval(mark, length=sizeOfLine)
+                fragment = FragmentOfCode(
+                    TypeOfFragment.LINE_STATEMENT, range, parent=root
+                )
+                result.append(fragment)
+
+        def process(i, c):
+            nonlocal mark
+            if c in ["\n"]:
+                # end of line
+                processLine(charStream[mark:i].rstrip())
+                mark = i + 1
+
+        for i, c in enumerate(charStream):
+            process(i, c)
+        if mark < sizeOfStream - 1:
+            processLine(charStream[mark:].rstrip())
+        return result
