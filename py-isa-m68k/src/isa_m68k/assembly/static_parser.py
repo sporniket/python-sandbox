@@ -39,8 +39,7 @@ MARK_OF_COMMENT_LINE = ["*", ";"]
 # }
 
 
-# TODO : FragmentOfCode IS an NodeRT
-class FragmentOfCode(NodeRT):
+class FragmentOfSourceCode(NodeRT):
     def __init__(
         self, type: TypeOfFragment, range: Interval, *, parent: NodeRT = None, **kwargs
     ):
@@ -62,13 +61,13 @@ class FragmentOfCode(NodeRT):
         return self._args
 
 
-class StaticParser:
+class FragmenterOfSourceFile:
     def __init__(self):
         pass
 
-    def parseSource(self, charStream: str) -> list[FragmentOfCode]:
+    def fragment(self, charStream: str) -> list[FragmentOfSourceCode]:
         sizeOfStream = len(charStream)
-        rootFragment = FragmentOfCode(
+        rootFragment = FragmentOfSourceCode(
             TypeOfFragment.SOURCE_FILE, Interval(0, length=sizeOfStream)
         )
         result = []
@@ -79,7 +78,7 @@ class StaticParser:
             if sizeOfLine > 0:
                 range = Interval(mark, length=sizeOfLine)
                 firstChar = charStream[mark]
-                fragment = FragmentOfCode(
+                fragment = FragmentOfSourceCode(
                     (
                         TypeOfFragment.LINE__COMMENT
                         if firstChar in MARK_OF_COMMENT_LINE
@@ -101,4 +100,18 @@ class StaticParser:
             process(i, c)
         if mark < sizeOfStream - 1:
             processLine(charStream[mark:].rstrip())
+        return result
+
+
+class FragmenterOfStatementLine:
+    def __init__(self):
+        pass
+
+    def fragment(
+        self, statementLine: FragmenterOfSourceFile, charStream: str
+    ) -> list[FragmentOfSourceCode]:
+        if statementLine.type != TypeOfFragment.LINE__STATEMENT:
+            raise ValueError("invalid.fragment.not.a.statement.line")
+        result = []
+
         return result
