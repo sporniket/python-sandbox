@@ -19,6 +19,6 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
-from .cli import PrettyPrinterCli
+from .cli import GenCppCli
 
-__all__ = ["PrettyPrinterCli"]
+__all__ = ["GenCppCli"]

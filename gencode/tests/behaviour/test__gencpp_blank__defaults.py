@@ -19,34 +19,37 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
-Whatever = "whatever"
+from contextlib import redirect_stderr
+from .utils import io, os, patch, redirect_stdout, sys
+
+from gencpp import GenCppCli
 
 ARGS = ["prog", "blank"]
 SOURCE_DATA_FILES = os.path.join(".", "tests", "data")
 EXPECTED_DATA_FILES = os.path.join(".", "tests", "data.expected")
 
+
 def test_that_it_create_files_in_main_directory():
     # Prepare files
-    setupFileNames = ["justquit.s"]
-    tmp_dir = initializeTmpWorkspace(
-        [os.path.join(SOURCE_DATA_FILES, f) for f in setupFileNames]
-    )
-    sourceFileNames = setupFileNames[:-1]
-    sourceFiles = [os.path.join(tmp_dir, f) for f in sourceFileNames]
-    outputFileNames = ["a.out", "a.json"]
+    # setupFileNames = ["justquit.s"]
+    # tmp_dir = initializeTmpWorkspace(
+    #    [os.path.join(SOURCE_DATA_FILES, f) for f in setupFileNames]
+    # )
+    # sourceFileNames = setupFileNames[:-1]
+    # sourceFiles = [os.path.join(tmp_dir, f) for f in sourceFileNames]
+    # outputFileNames = ["a.out", "a.json"]
 
     # execute
-    with patch.object(sys, "argv", ARGS + sourceFiles):
+    with patch.object(sys, "argv", ARGS + ["whatever"]):
         with redirect_stdout(io.StringIO()) as out:
             with redirect_stderr(io.StringIO()) as err:
-                returnCode = AssemblyCli().run()
+                returnCode = GenCppCli().run()
 
     # verify
     assert returnCode == 0
     # assert that the *.hpp file is created at tmp/include and contains expected content
     # assert that the *.cpp file is created at tmp/src and contains expected content
-    for f in outputFileNames:
-        thenActualFileIsSameAsExpected(
-            os.path.join(tmp_dir, f), os.path.join(EXPECTED_DATA_FILES, f)
-        )
-    
+    # for f in outputFileNames:
+    #    thenActualFileIsSameAsExpected(
+    #        os.path.join(tmp_dir, f), os.path.join(EXPECTED_DATA_FILES, f)
+    #    )

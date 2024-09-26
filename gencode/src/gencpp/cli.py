@@ -2,19 +2,19 @@
 ---
 (c) 2024 David SPORN
 ---
-This is part of $$$ -- whatever.
+This is part of Gencode -- whatever.
 
-$$$ is free software: you can redistribute it and/or
+Gencode is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your option)
 any later version.
 
-$$$ is distributed in the hope that it will be useful,
+Gencode is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
-You should have received a copy of the GNU General Public License along with $$$.
+You should have received a copy of the GNU General Public License along with Gencode.
 If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
@@ -24,29 +24,29 @@ import sys
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 
-class PrettyPrinterCli:
+class GenCppCli:
     @staticmethod
     def createArgParser() -> ArgumentParser:
         # TODO Rewrite parser as needed
         parser = ArgumentParser(
-            prog="python3 -m $$$.pp",
-            description="Whatever.",
+            prog="python3 -m gencode.gencpp",
+            description="Generate CPP code files tree or snippet.",
             epilog="""---
 (c) 2024 David SPORN
 ---
-This is part of $$$ -- Sporniket's toolbox for assembly language.
+This is part of Gencode -- Sporniket's generator of code.
 
-$$$ is free software: you can redistribute it and/or
+Gencode is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your option)
 any later version.
 
-$$$ is distributed in the hope that it will be useful,
+Gencode is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
-You should have received a copy of the GNU General Public License along with $$$.
+You should have received a copy of the GNU General Public License along with Gencode.
 If not, see <https://www.gnu.org/licenses/>. 
 ---
 """,
@@ -56,26 +56,26 @@ If not, see <https://www.gnu.org/licenses/>. 
 
         # Add the arguments
         parser.add_argument(
-            "--stylesheet",
-            metavar="<stylesheet>",
+            "--config",
+            metavar="<config>",
             type=str,
-            help="the formatting rules to follow, either 'builtin:heritage' (the default) or 'builtin:sporniket'",
+            help="the project wide configuration",
         )
 
         parser.add_argument(
-            "sources",
-            metavar="<source files...>",
+            "generator",
+            metavar="<generator>",
             type=str,
-            nargs="*",
-            help="a list of source files",
+            nargs=1,
+            help="the name of the generator",
         )
 
-        commandGroup = parser.add_mutually_exclusive_group(required=False)
-        commandGroup.add_argument(
-            "-r",
-            "--rewrite",
-            action="store_true",
-            help=f"Replace the source files by their pretty-printed version WHEN THERE IS A DIFFERENCE.",
+        parser.add_argument(
+            "params",
+            metavar="<parameter>",
+            type=str,
+            nargs="*",
+            help="a non-empty list of specific parameters required by the template",
         )
 
         return parser
@@ -85,73 +85,20 @@ If not, see <https://www.gnu.org/licenses/>. 
 
     def run(self):
         try:
-            args = PrettyPrinterCli.createArgParser().parse_args()
+            args = GenCppCli.createArgParser().parse_args()
             # TODO other things that may throw a value error
         except ValueError as e:
             print(e, file=sys.stderr)
             return 1
         else:
-            if len(args.sources) > 0:
-                # EITHER process given list of files...
-                sourcesErrors = []
-
-                # -- Check the list of files
-                for source in args.sources:
-                    if os.path.exists(source):
-                        if os.path.isfile(source):
-                            # NO PROBLEM
-                            continue
-                        else:
-                            sourcesErrors += [
-                                {"errorType": "NOT_A_FILE", "path": source}
-                            ]
-                    else:
-                        sourcesErrors += [{"errorType": "MISSING_FILE", "path": source}]
-                if len(sourcesErrors) > 0:
-                    report = []
-                    for e in sourcesErrors:
-                        message = (
-                            f"* MISSING : {e['path']}"
-                            if e["errorType"] == "MISSING_FILE"
-                            else f"* NOT A FILE : {e['path']}"
-                        )
-                        report += [message]
-                    report = "\n".join(report)
-                    print(
-                        f"ERROR -- in given list of files :\n{report}", file=sys.stderr
-                    )
-                    return 1
-
-                # -- Proceed
-                for source in args.sources:
-                    # This is a bootstrap with just reading the lines without further thinking
-                    # If the input file is to be loaded in a whole string or as a binary file,
-                    # write another loading code
-                    with open(source, "rt") as f:
-                        lines = f.readlines()
-                    if args.whatever:
-                        # WHATEVER PROCESSING MODE
-                        for line in lines:
-                            # TODO process lines accordingly
-                            pass
-                    else:
-                        # Normal mode
-                        for line in lines:
-                            # TODO process lines accordingly
-                            pass
+            if args.config:
+                # TODO initialise default configuration and override with config file
+                pass
             else:
-                # ...OR process standard input
-
-                # -- unless SOMETHING IS WRONG
-                if args.rewrite:
-                    print(
-                        "ERROR -- rewrite mode requires a list of files",
-                        file=sys.stderr,
-                    )
-                    return 1
-
-                # -- Proceed
-                for line in sys.stdin:
-                    pass
+                # TODO initialise default configuration
+                pass
+            # TODO get code generator : generator = codegen[args.generator]
+            # TODO call generator : generator.perform(config, args.params)
+            # TODO the generator should use its own argparse to display help or validate the parameters
 
             return 0

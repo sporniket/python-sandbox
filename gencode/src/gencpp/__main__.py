@@ -20,11 +20,11 @@ If not, see <https://www.gnu.org/licenses/>. 
 """
 
 import sys
-from .cli import PrettyPrinterCli
+from .cli import GenCppCli
 
 
 def main():
-    sys.exit(PrettyPrinterCli().run())
+    sys.exit(GenCppCli().run())
 
 
 if __name__ == "__main__":
