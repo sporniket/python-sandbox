@@ -20,6 +20,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 """
 
 import os
+import re
 import sys
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
@@ -59,7 +60,15 @@ If not, see <https://www.gnu.org/licenses/>. 
             "--config",
             metavar="<config>",
             type=str,
-            help="the project wide configuration",
+            help="the project wide configuration file",
+        )
+
+        parser.add_argument(
+            "--root",
+            metavar="<rootdir>",
+            type=str,
+            default=".",
+            help="the relative path of the project, defaults to the current path",
         )
 
         parser.add_argument(
@@ -83,6 +92,12 @@ If not, see <https://www.gnu.org/licenses/>. 
     def __init__(self):
         pass
 
+    def checkFolderOrMake(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
+        elif not os.path.isdir(path):
+            raise ValueError(f"not.directory:{path}")
+
     def run(self):
         try:
             args = GenCppCli.createArgParser().parse_args()
@@ -100,5 +115,18 @@ If not, see <https://www.gnu.org/licenses/>. 
             # TODO get code generator : generator = codegen[args.generator]
             # TODO call generator : generator.perform(config, args.params)
             # TODO the generator should use its own argparse to display help or validate the parameters
+
+            # That part should be put inside the generator
+            # It would support a root directory, and an optionnal library name
+            rootPath = "."
+            if args.root:
+                only_dots = re.compile(r"[.]+")
+                parts = [
+                    f for f in args.root.split("/") if f and not only_dots.match(f)
+                ]
+                rootPath = os.path.join(rootPath, *parts)
+
+            self.checkFolderOrMake(os.path.join(rootPath, "include"))
+            self.checkFolderOrMake(os.path.join(rootPath, "src"))
 
             return 0
