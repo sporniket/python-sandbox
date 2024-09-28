@@ -31,7 +31,7 @@ from .utils import initializeTmpWorkspace
 
 from gencpp import GenCppCli
 
-ARGS = ["prog"]
+ARGS = ["prog", "blank"]
 SOURCE_DATA_FILES = os.path.join(".", "tests", "data")
 EXPECTED_DATA_FILES = os.path.join(".", "tests", "data.expected")
 
@@ -53,7 +53,7 @@ def test_that_it_create_files_in_main_directory():
     # outputFileNames = ["a.out", "a.json"]
 
     # execute
-    with patch.object(sys, "argv", ARGS + ["--root", tmp_dir, "blank", "whatever"]):
+    with patch.object(sys, "argv", ARGS + ["--root", tmp_dir, "whatever"]):
         with redirect_stdout(io.StringIO()) as out:
             with redirect_stderr(io.StringIO()) as err:
                 returnCode = GenCppCli().run()
