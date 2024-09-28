@@ -27,7 +27,7 @@ import sys
 from contextlib import redirect_stderr, redirect_stdout
 from unittest.mock import patch
 
-from .utils import initializeTmpWorkspace
+from .utils import initializeTmpWorkspace, thenActualFileIsSameAsExpected
 
 from gencpp import GenCppCli
 
@@ -68,6 +68,17 @@ def test_that_it_create_files_in_main_directory():
             os.path.join(tmp_dir, "src"),
         ]
     )
+    for fileset in [
+        [
+            os.path.join(tmp_dir, "include", "whatever.hpp"),
+            os.path.join(EXPECTED_DATA_FILES, "root_whatever.hpp"),
+        ],
+        [
+            os.path.join(tmp_dir, "src", "whatever.cpp"),
+            os.path.join(EXPECTED_DATA_FILES, "root_whatever.cpp"),
+        ],
+    ]:
+        thenActualFileIsSameAsExpected(fileset[0], fileset[1])
     # assert that the *.hpp file is created at tmp/include and contains expected content
     # assert that the *.cpp file is created at tmp/src and contains expected content
     # for f in outputFileNames:
