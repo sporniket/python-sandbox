@@ -68,6 +68,30 @@ class GeneratorOfBlankFiles:
         elif not os.path.isdir(path):
             raise ValueError(f"not.directory:{path}")
 
+    def computeHeaderFileBody(self, args, config):
+        return ""
+
+    def computeProgramFileBody(self, args, config):
+        return ""
+
+    def generateHeaderFile(self, rootPath, args, config):
+        target = os.path.join(rootPath, "include", args.params[0] + ".hpp")
+        try:
+            with open(target, "x") as out:
+                source = self.computeHeaderFileBody(args, config)
+                out.write(source)
+        except FileExistsError:
+            print(f"error.file.exists:{target}")
+
+    def generateProgramFile(self, rootPath, args, config):
+        target = os.path.join(rootPath, "src", args.params[0] + ".cpp")
+        try:
+            with open(target, "x") as out:
+                source = self.computeProgramFileBody(args, config)
+                out.write(source)
+        except FileExistsError:
+            print(f"error.file.exists:{target}")
+
     def run(self, args):
         if args.config:
             # TODO initialise default configuration and override with config file
@@ -75,12 +99,7 @@ class GeneratorOfBlankFiles:
         else:
             # TODO initialise default configuration
             pass
-        # TODO get code generator : generator = codegen[args.generator]
-        # TODO call generator : generator.perform(config, args.params)
-        # TODO the generator should use its own argparse to display help or validate the parameters
 
-        # That part should be put inside the generator
-        # It would support a root directory, and an optionnal library name
         rootPath = "."
         if args.root:
             only_dots = re.compile(r"[.]+")
@@ -89,5 +108,8 @@ class GeneratorOfBlankFiles:
 
         self.checkFolderOrMake(os.path.join(rootPath, "include"))
         self.checkFolderOrMake(os.path.join(rootPath, "src"))
+
+        self.generateHeaderFile(rootPath, args, None)
+        self.generateProgramFile(rootPath, args, None)
 
         return 0
