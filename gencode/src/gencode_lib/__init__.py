@@ -18,3 +18,7 @@ You should have received a copy of the GNU General Public License along with Gen
 If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
+
+from .identifier import Whatever
+
+__all__ = ["Whatever"]
