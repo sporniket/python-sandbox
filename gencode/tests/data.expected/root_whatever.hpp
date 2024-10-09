@@ -1,4 +1,4 @@
-// no licence
+// no licence -- project '???'
 #ifndef WHATEVER__HPP
 #define WHATEVER__HPP
 // ================[ CODE BEGINS ]================

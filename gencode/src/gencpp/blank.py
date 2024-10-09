@@ -28,10 +28,33 @@ from gencode_lib import Identifier
 
 import jinja2
 
+TEMPLATE_SOURCES = {
+    "licence": """// no licence -- project '{{LABEL_PROJECT}}'""",
+    "source_header": """{{LICENCE}}
+#ifndef {{CODE_GUARD}}
+#define {{CODE_GUARD}}
+// ================[ CODE BEGINS ]================
+
+// ...your code...
+
+// ================[ END OF CODE ]================
+#endif""",
+    "source_main": """{{LICENCE}}
+#include "{{NAME_HEADER}}.hpp"
+
+// ...your code...
+
+""",
+}
+
 
 class GeneratorOfBlankFiles:
     def __init__(self):
-        pass
+        env = jinja2.Environment()
+        templates = {}
+        for key in TEMPLATE_SOURCES:
+            templates[key] = env.from_string(TEMPLATE_SOURCES[key])
+        self._templates = templates
 
     def appendSubParser(self, codename: str, subparser):
         # TODO Rewrite parser as needed
@@ -72,34 +95,23 @@ class GeneratorOfBlankFiles:
         elif not os.path.isdir(path):
             raise ValueError(f"not.directory:{path}")
 
+    def computeLicence(
+        self, projectLabel: str = "???", projectLicence: str = None
+    ) -> str:
+        return self._templates["licence"].render({"LABEL_PROJECT": projectLabel})
+
     def computeHeaderFileBody(self, args, config):
-        env = jinja2.Environment()
-        template = env.from_string(
-            """// no licence
-#ifndef {{CODE_GUARD}}
-#define {{CODE_GUARD}}
-// ================[ CODE BEGINS ]================
-
-// ...your code...
-
-// ================[ END OF CODE ]================
-#endif"""
-        )
-        return template.render(
-            {"CODE_GUARD": Identifier(f"{args.params[0]}.hpp").allcaps}
+        return self._templates["source_header"].render(
+            {
+                "CODE_GUARD": Identifier(f"{args.params[0]}.hpp").allcaps,
+                "LICENCE": self.computeLicence(),
+            }
         )
 
     def computeProgramFileBody(self, args, config):
-        env = jinja2.Environment()
-        template = env.from_string(
-            """// no licence
-#include "{{NAME_HEADER}}.hpp"
-
-// ...your code...
-
-"""
+        return self._templates["source_main"].render(
+            {"NAME_HEADER": args.params[0], "LICENCE": self.computeLicence()}
         )
-        return template.render({"NAME_HEADER": args.params[0]})
 
     def generateHeaderFile(self, rootPath, args, config):
         target = os.path.join(rootPath, "include", args.params[0] + ".hpp")

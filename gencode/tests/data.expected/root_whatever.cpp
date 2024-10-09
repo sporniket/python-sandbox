@@ -1,4 +1,4 @@
-// no licence
+// no licence -- project '???'
 #include "whatever.hpp"
 
 // ...your code...
