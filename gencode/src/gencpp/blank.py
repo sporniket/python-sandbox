@@ -92,7 +92,8 @@ class GeneratorOfBlankFiles:
     def computeProgramFileBody(self, args, config):
         env = jinja2.Environment()
         template = env.from_string(
-            """#include "{{NAME_HEADER}}.hpp"
+            """// no licence
+#include "{{NAME_HEADER}}.hpp"
 
 // ...your code...
 
