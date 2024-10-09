@@ -19,6 +19,6 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
-from .identifier import Whatever
+from .identifier import Identifier
 
-__all__ = ["Whatever"]
+__all__ = ["Identifier"]

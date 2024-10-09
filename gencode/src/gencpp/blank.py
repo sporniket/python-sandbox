@@ -24,6 +24,10 @@ import re
 import sys
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
+from gencode_lib import Identifier
+
+import jinja2
+
 
 class GeneratorOfBlankFiles:
     def __init__(self):
@@ -69,7 +73,21 @@ class GeneratorOfBlankFiles:
             raise ValueError(f"not.directory:{path}")
 
     def computeHeaderFileBody(self, args, config):
-        return ""
+        env = jinja2.Environment()
+        template = env.from_string(
+            """// no licence
+#ifndef {{CODE_GUARD}}
+#define {{CODE_GUARD}}
+// ================[ CODE BEGINS ]================
+
+// ...your code...
+
+// ================[ END OF CODE ]================
+#endif"""
+        )
+        return template.render(
+            {"CODE_GUARD": Identifier(f"{args.params[0]}.hpp").allcaps}
+        )
 
     def computeProgramFileBody(self, args, config):
         return ""

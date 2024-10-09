@@ -1,6 +1,6 @@
 // no licence
-#ifndef WHATEVER_HPP
-#define WHATEVER_HPP
+#ifndef WHATEVER__HPP
+#define WHATEVER__HPP
 // ================[ CODE BEGINS ]================
 
 // ...your code...

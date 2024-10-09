@@ -91,3 +91,20 @@ def test__Identifier__should_spot_separators_when_breaking_down_into_parts():
     assert p[0].isRegular and p[0].lowered == "what"
     assert p[1].isSeparator
     assert p[2].isRegular and p[2].lowered == "ever"
+
+
+def test__Identifier_allcaps__should_render_all_caps_identifiers():
+    assert Identifier("whatever").allcaps == "WHATEVER"
+
+    for id in ["whatEver", "WhatEver", "WHAT_EVER"]:
+        assert Identifier(id).allcaps == "WHAT_EVER"
+        assert Identifier(f".{id}").allcaps == "__WHAT_EVER"
+
+    for id in [
+        "what-ever",
+        "what_ever",
+        "what.ever",
+        "what___--_-_____ever",
+        "WHAT__EVER",
+    ]:
+        assert Identifier(id).allcaps == "WHAT__EVER"

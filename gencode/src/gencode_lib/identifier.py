@@ -202,3 +202,8 @@ class Identifier:
     def parts(self):
         # return a clone to prevent modification
         return [p for p in self._parts]
+
+    @property
+    def allcaps(self):
+        render = [p.allcaps for p in self._parts]
+        return "_".join(render).replace("___", "__")
