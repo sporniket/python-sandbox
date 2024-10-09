@@ -90,7 +90,15 @@ class GeneratorOfBlankFiles:
         )
 
     def computeProgramFileBody(self, args, config):
-        return ""
+        env = jinja2.Environment()
+        template = env.from_string(
+            """#include "{{NAME_HEADER}}.hpp"
+
+// ...your code...
+
+"""
+        )
+        return template.render({"NAME_HEADER": args.params[0]})
 
     def generateHeaderFile(self, rootPath, args, config):
         target = os.path.join(rootPath, "include", args.params[0] + ".hpp")
