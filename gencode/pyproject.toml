@@ -1,7 +1,7 @@
 [project]
 name = "gencode-by-sporniket"
 version = "1.0.0"
-description = "Sporniket's toolbox for assembly language"
+description = "Sporniket's toolbox for generating code"
 authors = [
     {name = "Sporniket", email = "sporniket.studio@gmail.com"},
 ]
@@ -11,7 +11,7 @@ dependencies = [
 requires-python = ">= 3.9"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
-keywords = ["assembler","pretty printer"]
+keywords = ["code generator"]
 
 [project.urls]
 homepage = "https://github.com/sporniket/gencode"
