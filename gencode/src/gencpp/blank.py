@@ -29,8 +29,32 @@ from gencode_lib import Identifier
 import jinja2
 
 TEMPLATE_SOURCES = {
-    "licence": """// no licence -- project '{{LABEL_PROJECT}}'""",
-    "source_header": """{{LICENCE}}
+    "copyright": """Copyright (C) {{YEARS_COPYRIGHT}} {{NAMES_COPYRIGHT}}""",
+    "licence_none": """ALL RIGHT RESERVED -- project '{{LABEL_PROJECT}}'""",
+    "licence_gpl-3.0-or-later": """This is part of {{LABEL_PROJECT}} -- {{DESCRIPTION_PROJECT}}.
+
+{{LABEL_PROJECT}} is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+{{LABEL_PROJECT}} is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Gencode.
+If not, see <https://www.gnu.org/licenses/>. 
+
+
+""",
+    "source_header": """/****************************************
+
+---
+{{COPYRIGHT}}
+---
+{{LICENCE}}
+****************************************/
 #ifndef {{CODE_GUARD}}
 #define {{CODE_GUARD}}
 // ================[ CODE BEGINS ]================
@@ -39,7 +63,13 @@ TEMPLATE_SOURCES = {
 
 // ================[ END OF CODE ]================
 #endif""",
-    "source_main": """{{LICENCE}}
+    "source_main": """/****************************************
+
+---
+{{COPYRIGHT}}
+---
+{{LICENCE}}
+****************************************/
 #include "{{NAME_HEADER}}.hpp"
 
 // ...your code...
@@ -95,23 +125,14 @@ class GeneratorOfBlankFiles:
         elif not os.path.isdir(path):
             raise ValueError(f"not.directory:{path}")
 
-    def computeLicence(
-        self, projectLabel: str = "???", projectLicence: str = None
-    ) -> str:
+    def computeLicence(self, projectLicence: str = None) -> str:
         return self._templates["licence"].render({"LABEL_PROJECT": projectLabel})
 
     def computeHeaderFileBody(self, args, config, index: int = 0):
-        return self._templates["source_header"].render(
-            {
-                "CODE_GUARD": Identifier(f"{args.params[index]}.hpp").allcaps,
-                "LICENCE": self.computeLicence(),
-            }
-        )
+        return self._templates["source_header"].render(config)
 
     def computeProgramFileBody(self, args, config, index: int = 0):
-        return self._templates["source_main"].render(
-            {"NAME_HEADER": args.params[index], "LICENCE": self.computeLicence()}
-        )
+        return self._templates["source_main"].render(config)
 
     def generateHeaderFile(self, rootPath, args, config, index: int = 0):
         target = os.path.join(rootPath, "include", args.params[index] + ".hpp")
@@ -132,10 +153,18 @@ class GeneratorOfBlankFiles:
             print(f"error.file.exists:{target}")
 
     def run(self, args):
+        config = {
+            "YEARS_COPYRIGHT": "20xx",
+            "NAMES_COPYRIGHT": "Unknown author",
+            "LABEL_PROJECT": "Unknown project",
+            "DESCRIPTION_PROJECT": "This project is unknown",
+        }
         if args.config:
             # TODO initialise default configuration and override with config file
             pass
         else:
+            config["COPYRIGHT"] = self._templates["copyright"].render(config)
+            config["LICENCE"] = self._templates["licence_none"].render(config)
             # TODO initialise default configuration
             pass
 
@@ -149,7 +178,9 @@ class GeneratorOfBlankFiles:
         self.checkFolderOrMake(os.path.join(rootPath, "src"))
 
         for i, n in enumerate(args.params):
-            self.generateHeaderFile(rootPath, args, None, i)
-            self.generateProgramFile(rootPath, args, None, i)
+            config["CODE_GUARD"] = Identifier(f"{args.params[i]}.hpp").allcaps
+            config["NAME_HEADER"] = args.params[i]
+            self.generateHeaderFile(rootPath, args, config, i)
+            self.generateProgramFile(rootPath, args, config, i)
 
         return 0

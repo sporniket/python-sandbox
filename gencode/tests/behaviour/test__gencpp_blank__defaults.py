@@ -50,7 +50,7 @@ def test_that_it_create_files_in_main_directory():
     )
 
     # execute
-    with patch.object(sys, "argv", ARGS + ["--root", tmp_dir, "whatever", "foo"]):
+    with patch.object(sys, "argv", ARGS + ["--root", tmp_dir, "whatEver", "foo"]):
         with redirect_stdout(io.StringIO()) as out:
             with redirect_stderr(io.StringIO()) as err:
                 returnCode = GenCppCli().run()
@@ -67,11 +67,11 @@ def test_that_it_create_files_in_main_directory():
     )
     for fileset in [
         [
-            os.path.join(tmp_dir, "include", "whatever.hpp"),
+            os.path.join(tmp_dir, "include", "whatEver.hpp"),
             os.path.join(EXPECTED_DATA_FILES, "root_whatever.hpp"),
         ],
         [
-            os.path.join(tmp_dir, "src", "whatever.cpp"),
+            os.path.join(tmp_dir, "src", "whatEver.cpp"),
             os.path.join(EXPECTED_DATA_FILES, "root_whatever.cpp"),
         ],
         [
