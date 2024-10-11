@@ -100,33 +100,33 @@ class GeneratorOfBlankFiles:
     ) -> str:
         return self._templates["licence"].render({"LABEL_PROJECT": projectLabel})
 
-    def computeHeaderFileBody(self, args, config):
+    def computeHeaderFileBody(self, args, config, index: int = 0):
         return self._templates["source_header"].render(
             {
-                "CODE_GUARD": Identifier(f"{args.params[0]}.hpp").allcaps,
+                "CODE_GUARD": Identifier(f"{args.params[index]}.hpp").allcaps,
                 "LICENCE": self.computeLicence(),
             }
         )
 
-    def computeProgramFileBody(self, args, config):
+    def computeProgramFileBody(self, args, config, index: int = 0):
         return self._templates["source_main"].render(
-            {"NAME_HEADER": args.params[0], "LICENCE": self.computeLicence()}
+            {"NAME_HEADER": args.params[index], "LICENCE": self.computeLicence()}
         )
 
-    def generateHeaderFile(self, rootPath, args, config):
-        target = os.path.join(rootPath, "include", args.params[0] + ".hpp")
+    def generateHeaderFile(self, rootPath, args, config, index: int = 0):
+        target = os.path.join(rootPath, "include", args.params[index] + ".hpp")
         try:
             with open(target, "x") as out:
-                source = self.computeHeaderFileBody(args, config)
+                source = self.computeHeaderFileBody(args, config, index)
                 out.write(source)
         except FileExistsError:
             print(f"error.file.exists:{target}")
 
-    def generateProgramFile(self, rootPath, args, config):
-        target = os.path.join(rootPath, "src", args.params[0] + ".cpp")
+    def generateProgramFile(self, rootPath, args, config, index: int = 0):
+        target = os.path.join(rootPath, "src", args.params[index] + ".cpp")
         try:
             with open(target, "x") as out:
-                source = self.computeProgramFileBody(args, config)
+                source = self.computeProgramFileBody(args, config, index)
                 out.write(source)
         except FileExistsError:
             print(f"error.file.exists:{target}")
@@ -148,7 +148,8 @@ class GeneratorOfBlankFiles:
         self.checkFolderOrMake(os.path.join(rootPath, "include"))
         self.checkFolderOrMake(os.path.join(rootPath, "src"))
 
-        self.generateHeaderFile(rootPath, args, None)
-        self.generateProgramFile(rootPath, args, None)
+        for i, n in enumerate(args.params):
+            self.generateHeaderFile(rootPath, args, None, i)
+            self.generateProgramFile(rootPath, args, None, i)
 
         return 0

@@ -48,12 +48,9 @@ def test_that_it_create_files_in_main_directory():
     tmp_dir = initializeTmpWorkspace(
         [os.path.join(SOURCE_DATA_FILES, f) for f in setupFileNames]
     )
-    # sourceFileNames = setupFileNames[:-1]
-    # sourceFiles = [os.path.join(tmp_dir, f) for f in sourceFileNames]
-    # outputFileNames = ["a.out", "a.json"]
 
     # execute
-    with patch.object(sys, "argv", ARGS + ["--root", tmp_dir, "whatever"]):
+    with patch.object(sys, "argv", ARGS + ["--root", tmp_dir, "whatever", "foo"]):
         with redirect_stdout(io.StringIO()) as out:
             with redirect_stderr(io.StringIO()) as err:
                 returnCode = GenCppCli().run()
@@ -77,11 +74,13 @@ def test_that_it_create_files_in_main_directory():
             os.path.join(tmp_dir, "src", "whatever.cpp"),
             os.path.join(EXPECTED_DATA_FILES, "root_whatever.cpp"),
         ],
+        [
+            os.path.join(tmp_dir, "include", "foo.hpp"),
+            os.path.join(EXPECTED_DATA_FILES, "root_foo.hpp"),
+        ],
+        [
+            os.path.join(tmp_dir, "src", "foo.cpp"),
+            os.path.join(EXPECTED_DATA_FILES, "root_foo.cpp"),
+        ],
     ]:
         thenActualFileIsSameAsExpected(fileset[0], fileset[1])
-    # assert that the *.hpp file is created at tmp/include and contains expected content
-    # assert that the *.cpp file is created at tmp/src and contains expected content
-    # for f in outputFileNames:
-    #    thenActualFileIsSameAsExpected(
-    #        os.path.join(tmp_dir, f), os.path.join(EXPECTED_DATA_FILES, f)
-    #    )
