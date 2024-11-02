@@ -21,13 +21,13 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from isa_m68k.assembly.static_parser import (
     FragmentOfSourceCode,
-    TypeOfFragment,
+    TypeOfFragmentOfSourceCode,
 )
 
 
 def thenFragmentMeetsExpectations(
     fragment: FragmentOfSourceCode,
-    type: TypeOfFragment,
+    type: TypeOfFragmentOfSourceCode,
     start: int,
     length: int,
     *,

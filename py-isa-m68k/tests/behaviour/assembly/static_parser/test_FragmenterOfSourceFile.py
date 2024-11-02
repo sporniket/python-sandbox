@@ -22,7 +22,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 from isa_m68k.assembly.static_parser import (
     FragmenterOfSourceFile,
     FragmentOfSourceCode,
-    TypeOfFragment,
+    TypeOfFragmentOfSourceCode,
 )
 
 from .utils import thenFragmentMeetsExpectations
@@ -44,26 +44,61 @@ def test__FragmenterOfSourceFile_fragment__ignores_empty_lines():
 
     root = fragments[0].parent
     assert root is not None
-    assert root.type == TypeOfFragment.SOURCE_FILE
+    assert root.type == TypeOfFragmentOfSourceCode.SOURCE_FILE
 
     thenFragmentMeetsExpectations(
-        fragments[0], TypeOfFragment.LINE__COMMENT, 0, 2, parent=root, childRank=0
+        fragments[0],
+        TypeOfFragmentOfSourceCode.LINE__COMMENT,
+        0,
+        2,
+        parent=root,
+        childRank=0,
     )
     thenFragmentMeetsExpectations(
-        fragments[1], TypeOfFragment.LINE__COMMENT, 4, 33, parent=root, childRank=1
+        fragments[1],
+        TypeOfFragmentOfSourceCode.LINE__COMMENT,
+        4,
+        33,
+        parent=root,
+        childRank=1,
     )
     thenFragmentMeetsExpectations(
-        fragments[2], TypeOfFragment.LINE__COMMENT, 38, 1, parent=root, childRank=2
+        fragments[2],
+        TypeOfFragmentOfSourceCode.LINE__COMMENT,
+        38,
+        1,
+        parent=root,
+        childRank=2,
     )
     thenFragmentMeetsExpectations(
-        fragments[3], TypeOfFragment.LINE__COMMENT, 40, 51, parent=root, childRank=3
+        fragments[3],
+        TypeOfFragmentOfSourceCode.LINE__COMMENT,
+        40,
+        51,
+        parent=root,
+        childRank=3,
     )
     thenFragmentMeetsExpectations(
-        fragments[4], TypeOfFragment.LINE__COMMENT, 92, 1, parent=root, childRank=4
+        fragments[4],
+        TypeOfFragmentOfSourceCode.LINE__COMMENT,
+        92,
+        1,
+        parent=root,
+        childRank=4,
     )
     thenFragmentMeetsExpectations(
-        fragments[5], TypeOfFragment.LINE__STATEMENT, 96, 68, parent=root, childRank=5
+        fragments[5],
+        TypeOfFragmentOfSourceCode.LINE__STATEMENT,
+        96,
+        68,
+        parent=root,
+        childRank=5,
     )
     thenFragmentMeetsExpectations(
-        fragments[6], TypeOfFragment.LINE__STATEMENT, 165, 45, parent=root, childRank=6
+        fragments[6],
+        TypeOfFragmentOfSourceCode.LINE__STATEMENT,
+        165,
+        45,
+        parent=root,
+        childRank=6,
     )

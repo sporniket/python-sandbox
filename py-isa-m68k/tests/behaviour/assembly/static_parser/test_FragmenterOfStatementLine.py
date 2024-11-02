@@ -22,7 +22,9 @@ If not, see <https://www.gnu.org/licenses/>. 
 from isa_m68k.assembly.static_parser import (
     FragmenterOfStatementLine,
     FragmentOfSourceCode,
-    TypeOfFragment,
+    TypeOfFragmentOfSourceCode,
+    FragmentOfSourceCode,
+    TypeOfFragmentOfSourceCode,
 )
 from isa_m68k.py_models import Interval
 
@@ -31,11 +33,37 @@ from .utils import thenFragmentMeetsExpectations
 
 
 def test__FragmenterOfSourceFile_fragment__fragments_lines_into_fields():
+    statementFragment = FragmentOfSourceCode(
+        TypeOfFragmentOfSourceCode.LINE__STATEMENT, range=Interval(96, length=68)
+    )
     fragments = FragmenterOfStatementLine().fragment(
-        FragmentOfSourceCode(
-            TypeOfFragment.LINE__STATEMENT, range=Interval(96, length=68)
-        ),
+        statementFragment,
         """                move.w  #0,-(sp) ; GEMDOS function code 0 = Pterm0()""",
     )
 
-    assert len(fragments) == 0
+    assert len(fragments) == 3
+    fragment = fragments[0]
+    thenFragmentMeetsExpectations(
+        fragments[0],
+        TypeOfFragmentOfSourceCode.FIELD__MNEMONIC,
+        16,
+        6,
+        parent=statementFragment,
+        childRank=0,
+    )
+    thenFragmentMeetsExpectations(
+        fragments[1],
+        TypeOfFragmentOfSourceCode.FIELD__OPERANDS,
+        24,
+        8,
+        parent=statementFragment,
+        childRank=1,
+    )
+    thenFragmentMeetsExpectations(
+        fragments[2],
+        TypeOfFragmentOfSourceCode.FIELD__COMMENTS,
+        35,
+        33,
+        parent=statementFragment,
+        childRank=2,
+    )
