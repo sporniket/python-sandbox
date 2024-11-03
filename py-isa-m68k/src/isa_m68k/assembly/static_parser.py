@@ -40,7 +40,9 @@ TypeOfFragmentOfSourceCode = Enum(
         "FIELD__LABEL",
         "FIELD__MNEMONIC",
         "FIELD__OPERANDS",
-        "FIELD__COMMENTS",
+        "FIELD__COMMENTS",  #
+        "MNEMONIC__RADIX",
+        "MNEMONIC__SUFFIX",
     ],
 )
 
@@ -145,13 +147,16 @@ INSIDE_STRING_LITTERAL = 11  # temporary state that waits for end of the string.
 
 class FragmenterOfStatementLine:
     def __init__(self):
+        self._fragmenterOfMnemonic = FragmenterOfMnemonicField()
         pass
 
     def fragment(
         self, statementLine: FragmentOfSourceCode, charStream: str
     ) -> list[FragmentOfSourceCode]:
         if statementLine.type != TypeOfFragmentOfSourceCode.LINE__STATEMENT:
-            raise ValueError("invalid.fragment.not.a.statement.line")
+            raise ValueError(
+                f"invalid.fragment.not.a.statement.line:{statementLine.type}"
+            )
         stringMarker = '"'
         lastMark = 0
         escapeStringMarker = False
@@ -352,4 +357,49 @@ class FragmenterOfStatementLine:
             )
             raise ValueError("invalid.string.litteral.still.open")
 
+        # perform further fragmenting
+        for c in statementLine.children:
+            if c.type == TypeOfFragmentOfSourceCode.FIELD__MNEMONIC:
+                self._fragmenterOfMnemonic.fragment(c, charStream)
         return statementLine.children
+
+
+########################[Mnemonic field (field of statement) --> fragments (radix and suffix)]########################
+
+
+class FragmenterOfMnemonicField:
+    def __init__(self):
+        pass
+
+    def fragment(
+        self, mnemonic: FragmentOfSourceCode, charStream: str
+    ) -> list[FragmentOfSourceCode]:
+        if mnemonic.type != TypeOfFragmentOfSourceCode.FIELD__MNEMONIC:
+            raise ValueError(f"invalid.fragment.not.a.mnemonic.field:{mnemonic.type}")
+        extract = charStream[mnemonic.range.start : mnemonic.range.end]
+        sizeOfExtract = len(extract)
+        indexSeparator = extract.rfind(".")
+        if indexSeparator > -1:
+            # there is a separator
+            afterSeparator = indexSeparator + 1
+            if indexSeparator > 0:
+                FragmentOfSourceCode(
+                    TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+                    Interval(0, end=indexSeparator),
+                    parent=mnemonic,
+                )
+            if sizeOfExtract > afterSeparator:
+                FragmentOfSourceCode(
+                    TypeOfFragmentOfSourceCode.MNEMONIC__SUFFIX,
+                    Interval(afterSeparator, end=sizeOfExtract),
+                    parent=mnemonic,
+                )
+        else:
+            if sizeOfExtract > 0:
+                FragmentOfSourceCode(
+                    TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+                    Interval(0, end=sizeOfExtract),
+                    parent=mnemonic,
+                )
+
+        return mnemonic.children

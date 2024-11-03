@@ -42,7 +42,7 @@ def test__FragmenterOfSourceFile_fragment__fragments_lines_into_fields():
     )
 
     assert len(fragments) == 3
-    fragment = fragments[0]
+    ### verify all about mnemonic
     thenFragmentMeetsExpectations(
         fragments[0],
         TypeOfFragmentOfSourceCode.FIELD__MNEMONIC,
@@ -51,6 +51,26 @@ def test__FragmenterOfSourceFile_fragment__fragments_lines_into_fields():
         parent=statementFragment,
         childRank=0,
     )
+    children_mnemonics = fragments[0].children
+    assert len(children_mnemonics) == 2
+    thenFragmentMeetsExpectations(
+        children_mnemonics[0],
+        TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+        0,
+        4,
+        parent=fragments[0],
+        childRank=0,
+    )
+    thenFragmentMeetsExpectations(
+        children_mnemonics[1],
+        TypeOfFragmentOfSourceCode.MNEMONIC__SUFFIX,
+        5,
+        1,
+        parent=fragments[0],
+        childRank=1,
+    )
+
+    ### verify all about operands
     thenFragmentMeetsExpectations(
         fragments[1],
         TypeOfFragmentOfSourceCode.FIELD__OPERANDS,
@@ -59,6 +79,8 @@ def test__FragmenterOfSourceFile_fragment__fragments_lines_into_fields():
         parent=statementFragment,
         childRank=1,
     )
+
+    ### verify all about comments
     thenFragmentMeetsExpectations(
         fragments[2],
         TypeOfFragmentOfSourceCode.FIELD__COMMENTS,
