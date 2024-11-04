@@ -28,7 +28,7 @@ from isa_m68k.assembly.static_parser import (
 from .utils import thenFragmentMeetsExpectations
 
 
-def test__FragmenterOfSourceFile_fragment__ignores_empty_lines():
+def test__FragmenterOfSourceFile_fragment__fragments_source_into_lines():
     fragments = FragmenterOfSourceFile().fragment(
         """** 
 * A minimal program for Atari ST.

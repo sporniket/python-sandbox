@@ -69,6 +69,14 @@ class FragmentOfSourceCode(NodeRT):
         self._range = range
         self._args = kwargs
 
+        # cache absolute start
+        start = range.start
+        currentParent = parent
+        while currentParent is not None:
+            start = start + currentParent.range.start
+            currentParent = currentParent.parent
+        self._absoluteRange = Interval(start, length=range.length)
+
     @property
     def type(self) -> TypeOfFragmentOfSourceCode:
         return self._type
@@ -80,6 +88,14 @@ class FragmentOfSourceCode(NodeRT):
     @property
     def args(self) -> dict:
         return self._args
+
+    @property
+    def absoluteStart(self) -> dict:
+        return self._absoluteRange.start
+
+    @property
+    def absoluteEnd(self) -> dict:
+        return self._absoluteRange.end
 
 
 class FragmenterOfSourceFile:
@@ -159,8 +175,8 @@ class FragmenterOfStatementLine:
             )
         stringMarker = '"'
         lastMark = 0
-        escapeStringMarker = False
-        for i, c in enumerate(charStream):
+        extract = charStream[statementLine.absoluteStart : statementLine.absoluteEnd]
+        for i, c in enumerate(extract):
             if i == 0:
                 if c not in WHITESPACES:
                     self._state = ACCUMULATE_LABEL
@@ -319,48 +335,45 @@ class FragmenterOfStatementLine:
                         f"Unknown state '{self._state}' at position {i}, character '{c}' while parsing line of code : {line}"
                     )
         # When finished while still accumulating, create the last fragment
+        endOfSubStream = len(extract)
         if self._state == ACCUMULATE_LABEL:
             FragmentOfSourceCode(
                 TypeOfFragmentOfSourceCode.FIELD__LABEL,
-                Interval(lastMark, end=len(charStream)),
+                Interval(lastMark, end=endOfSubStream),
                 parent=statementLine,
             )
         elif self._state == ACCUMULATE_LABEL_OR_MNEMONIC:
             FragmentOfSourceCode(
                 TypeOfFragmentOfSourceCode.FIELD__LABEL,
-                Interval(lastMark, end=len(charStream)),
+                Interval(lastMark, end=endOfSubStream),
                 parent=statementLine,
             )
         elif self._state == ACCUMULATE_MNEMONIC:
             FragmentOfSourceCode(
                 TypeOfFragmentOfSourceCode.FIELD__MNEMONIC,
-                Interval(lastMark, end=len(charStream)),
+                Interval(lastMark, end=endOfSubStream),
                 parent=statementLine,
             )
         elif self._state == ACCUMULATE_OPERANDS:
             FragmentOfSourceCode(
                 TypeOfFragmentOfSourceCode.FIELD__OPERANDS,
-                Interval(lastMark, end=len(charStream)),
+                Interval(lastMark, end=endOfSubStream),
                 parent=statementLine,
             )
         elif self._state == ACCUMULATE_COMMENT:
             FragmentOfSourceCode(
                 TypeOfFragmentOfSourceCode.FIELD__COMMENTS,
-                Interval(lastMark, end=len(charStream)),
+                Interval(lastMark, end=endOfSubStream),
                 parent=statementLine,
             )
         elif self._state == INSIDE_STRING_LITTERAL:
             FragmentOfSourceCode(
                 TypeOfFragmentOfSourceCode.FIELD__OPERANDS,
-                Interval(lastMark, end=len(charStream)),
+                Interval(lastMark, end=endOfSubStream),
                 parent=statementLine,
             )
             raise ValueError("invalid.string.litteral.still.open")
 
-        # perform further fragmenting
-        for c in statementLine.children:
-            if c.type == TypeOfFragmentOfSourceCode.FIELD__MNEMONIC:
-                self._fragmenterOfMnemonic.fragment(c, charStream)
         return statementLine.children
 
 
@@ -376,7 +389,7 @@ class FragmenterOfMnemonicField:
     ) -> list[FragmentOfSourceCode]:
         if mnemonic.type != TypeOfFragmentOfSourceCode.FIELD__MNEMONIC:
             raise ValueError(f"invalid.fragment.not.a.mnemonic.field:{mnemonic.type}")
-        extract = charStream[mnemonic.range.start : mnemonic.range.end]
+        extract = charStream[mnemonic.absoluteStart : mnemonic.absoluteEnd]
         sizeOfExtract = len(extract)
         indexSeparator = extract.rfind(".")
         if indexSeparator > -1:

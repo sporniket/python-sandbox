@@ -20,7 +20,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 """
 
 from isa_m68k.assembly.static_parser import (
-    FragmenterOfStatementLine,
+    FragmenterOfMnemonicField,
     FragmentOfSourceCode,
     TypeOfFragmentOfSourceCode,
 )
@@ -30,7 +30,7 @@ from isa_m68k.py_models import Interval
 from .utils import thenFragmentMeetsExpectations
 
 
-def test__FragmenterOfStatementLine_fragment__fragments_line_into_fields():
+def test__FragmenterOfMnemonicField_fragment__fragments_mnemonic_field_into_radix_and_suffix():
     sourceFile = """** 
 * A minimal program for Atari ST.
 *
@@ -39,44 +39,33 @@ def test__FragmenterOfStatementLine_fragment__fragments_line_into_fields():
 
                 move.w  #0,-(sp) ; GEMDOS function code 0 = Pterm0()
                 trap    #1      ; Call GEMDOS"""
-    statementFragment = FragmentOfSourceCode(
-        TypeOfFragmentOfSourceCode.LINE__STATEMENT,
-        range=Interval(96, length=68),
+    mnemonicFragment = FragmentOfSourceCode(
+        TypeOfFragmentOfSourceCode.FIELD__MNEMONIC,
+        range=Interval(16, length=6),
         parent=FragmentOfSourceCode(
-            TypeOfFragmentOfSourceCode.SOURCE_FILE, range=Interval(0, length=210)
+            TypeOfFragmentOfSourceCode.LINE__STATEMENT,
+            range=Interval(96, length=68),
+            parent=FragmentOfSourceCode(
+                TypeOfFragmentOfSourceCode.SOURCE_FILE, range=Interval(0, length=210)
+            ),
         ),
     )
-    fragments = FragmenterOfStatementLine().fragment(statementFragment, sourceFile)
+    fragments = FragmenterOfMnemonicField().fragment(mnemonicFragment, sourceFile)
 
-    assert len(fragments) == 3
-    ### verify all about mnemonic
+    assert len(fragments) == 2
     thenFragmentMeetsExpectations(
         fragments[0],
-        TypeOfFragmentOfSourceCode.FIELD__MNEMONIC,
-        16,
-        6,
-        parent=statementFragment,
+        TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+        0,
+        4,
+        parent=mnemonicFragment,
         childRank=0,
     )
-    assert len(fragments[0].children) == 0
-
-    ### verify all about operands
     thenFragmentMeetsExpectations(
         fragments[1],
-        TypeOfFragmentOfSourceCode.FIELD__OPERANDS,
-        24,
-        8,
-        parent=statementFragment,
+        TypeOfFragmentOfSourceCode.MNEMONIC__SUFFIX,
+        5,
+        1,
+        parent=mnemonicFragment,
         childRank=1,
-    )
-    assert len(fragments[1].children) == 0
-
-    ### verify all about comments
-    thenFragmentMeetsExpectations(
-        fragments[2],
-        TypeOfFragmentOfSourceCode.FIELD__COMMENTS,
-        35,
-        33,
-        parent=statementFragment,
-        childRank=2,
     )

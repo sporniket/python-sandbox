@@ -32,8 +32,14 @@ def thenFragmentMeetsExpectations(
     length: int,
     *,
     parent=None,
-    childRank: int = -1
+    childRank: int = -1,
 ):
+    print(
+        f"""---
+actual type = {fragment.type}
+actual start = {fragment.range.start}
+actual length = {fragment.range.length}"""
+    )
     assert fragment.type == type
     assert fragment.range.start == start
     assert fragment.range.length == length
