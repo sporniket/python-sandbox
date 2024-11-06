@@ -21,127 +21,10 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from enum import Enum
 from typing import List
-from ..py_models import Interval, NodeRT
+from ...py_models import Interval
 
-
-MARKERS__COMMENT = ["*", ";"]
-MARKERS__STRING = ['"', "'"]
-MARKERS__LABEL = [":"]
-WHITESPACES = [" ", "\t"]
-
-########################[Source code --> fragments (line of code)]########################
-
-TypeOfFragmentOfSourceCode = Enum(
-    "TypeOfFragmentOfSourceCode",
-    [
-        "SOURCE_FILE",  #
-        "LINE__COMMENT",
-        "LINE__STATEMENT",  #
-        "FIELD__LABEL",
-        "FIELD__MNEMONIC",
-        "FIELD__OPERANDS",
-        "FIELD__COMMENTS",  #
-        "MNEMONIC__RADIX",
-        "MNEMONIC__SUFFIX",
-    ],
-)
-
-# FragmentOfCode
-# {
-#     NodeRT node : relationships between fragment
-#     Interval range : location of the fragment
-#     any type : tag for processing
-#     dict[any] args : any relevant supplemental data
-# }
-
-
-class FragmentOfSourceCode(NodeRT):
-    def __init__(
-        self,
-        type: TypeOfFragmentOfSourceCode,
-        range: Interval,
-        *,
-        parent: NodeRT = None,
-        **kwargs,
-    ):
-        super().__init__(parent=parent)
-        self._type = type
-        self._range = range
-        self._args = kwargs
-
-        # cache absolute start
-        start = range.start
-        currentParent = parent
-        while currentParent is not None:
-            start = start + currentParent.range.start
-            currentParent = currentParent.parent
-        self._absoluteRange = Interval(start, length=range.length)
-
-    @property
-    def type(self) -> TypeOfFragmentOfSourceCode:
-        return self._type
-
-    @property
-    def range(self) -> Interval:
-        return self._range
-
-    @property
-    def args(self) -> dict:
-        return self._args
-
-    @property
-    def absoluteStart(self) -> dict:
-        return self._absoluteRange.start
-
-    @property
-    def absoluteEnd(self) -> dict:
-        return self._absoluteRange.end
-
-
-class FragmenterOfSourceFile:
-    def __init__(self):
-        pass
-
-    def fragment(self, charStream: str) -> list[FragmentOfSourceCode]:
-        sizeOfStream = len(charStream)
-        rootFragment = FragmentOfSourceCode(
-            TypeOfFragmentOfSourceCode.SOURCE_FILE, Interval(0, length=sizeOfStream)
-        )
-        result = []
-        mark = 0
-
-        def processLine(line):
-            sizeOfLine = len(line)
-            if sizeOfLine > 0:
-                range = Interval(mark, length=sizeOfLine)
-                firstChar = charStream[mark]
-                fragment = FragmentOfSourceCode(
-                    (
-                        TypeOfFragmentOfSourceCode.LINE__COMMENT
-                        if firstChar in MARKERS__COMMENT
-                        else TypeOfFragmentOfSourceCode.LINE__STATEMENT
-                    ),
-                    range,
-                    parent=rootFragment,
-                )
-                result.append(fragment)
-
-        def process(i, c):
-            nonlocal mark
-            if c in ["\n"]:
-                # end of line
-                processLine(charStream[mark:i].rstrip())
-                mark = i + 1
-
-        for i, c in enumerate(charStream):
-            process(i, c)
-        if mark < sizeOfStream - 1:
-            processLine(charStream[mark:].rstrip())
-        return result
-
-
-########################[Statement (Fragment of Source code) --> fragments (fields of statement)]########################
-
+from .fragment import TypeOfFragmentOfSourceCode, FragmentOfSourceCode
+from .setOfChars import WHITESPACES, MARKERS__COMMENT, MARKERS__LABEL, MARKERS__STRING
 
 # state machine states for parsing a statement line
 ACCUMULATE_LABEL = 0  # when first character is not whitespace --> WAIT_MNEMONIC
@@ -163,7 +46,6 @@ INSIDE_STRING_LITTERAL = 11  # temporary state that waits for end of the string.
 
 class FragmenterOfStatementLine:
     def __init__(self):
-        self._fragmenterOfMnemonic = FragmenterOfMnemonicField()
         pass
 
     def fragment(
@@ -375,44 +257,3 @@ class FragmenterOfStatementLine:
             raise ValueError("invalid.string.litteral.still.open")
 
         return statementLine.children
-
-
-########################[Mnemonic field (field of statement) --> fragments (radix and suffix)]########################
-
-
-class FragmenterOfMnemonicField:
-    def __init__(self):
-        pass
-
-    def fragment(
-        self, mnemonic: FragmentOfSourceCode, charStream: str
-    ) -> list[FragmentOfSourceCode]:
-        if mnemonic.type != TypeOfFragmentOfSourceCode.FIELD__MNEMONIC:
-            raise ValueError(f"invalid.fragment.not.a.mnemonic.field:{mnemonic.type}")
-        extract = charStream[mnemonic.absoluteStart : mnemonic.absoluteEnd]
-        sizeOfExtract = len(extract)
-        indexSeparator = extract.rfind(".")
-        if indexSeparator > -1:
-            # there is a separator
-            afterSeparator = indexSeparator + 1
-            if indexSeparator > 0:
-                FragmentOfSourceCode(
-                    TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
-                    Interval(0, end=indexSeparator),
-                    parent=mnemonic,
-                )
-            if sizeOfExtract > afterSeparator:
-                FragmentOfSourceCode(
-                    TypeOfFragmentOfSourceCode.MNEMONIC__SUFFIX,
-                    Interval(afterSeparator, end=sizeOfExtract),
-                    parent=mnemonic,
-                )
-        else:
-            if sizeOfExtract > 0:
-                FragmentOfSourceCode(
-                    TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
-                    Interval(0, end=sizeOfExtract),
-                    parent=mnemonic,
-                )
-
-        return mnemonic.children
