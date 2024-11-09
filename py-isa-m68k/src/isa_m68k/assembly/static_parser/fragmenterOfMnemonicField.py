@@ -28,6 +28,15 @@ from .fragment import TypeOfFragmentOfSourceCode, FragmentOfSourceCode
 from .specialChars import MARKER__SUFFIX_OF_OPERATION_CODE
 
 
+TypeOfMnemonicPart = Enum(
+    "TypeOfMnemonicPart",
+    [
+        "MNEMONIC__RADIX",
+        "MNEMONIC__SUFFIX",
+    ],
+)
+
+
 class FragmenterOfMnemonicField:
     def __init__(self):
         pass
@@ -45,20 +54,20 @@ class FragmenterOfMnemonicField:
             afterSeparator = indexSeparator + 1
             if indexSeparator > 0:
                 FragmentOfSourceCode(
-                    TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+                    TypeOfMnemonicPart.MNEMONIC__RADIX,
                     Interval(0, end=indexSeparator),
                     parent=mnemonic,
                 )
             if sizeOfExtract > afterSeparator:
                 FragmentOfSourceCode(
-                    TypeOfFragmentOfSourceCode.MNEMONIC__SUFFIX,
+                    TypeOfMnemonicPart.MNEMONIC__SUFFIX,
                     Interval(afterSeparator, end=sizeOfExtract),
                     parent=mnemonic,
                 )
         else:
             if sizeOfExtract > 0:
                 FragmentOfSourceCode(
-                    TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+                    TypeOfMnemonicPart.MNEMONIC__RADIX,
                     Interval(0, end=sizeOfExtract),
                     parent=mnemonic,
                 )

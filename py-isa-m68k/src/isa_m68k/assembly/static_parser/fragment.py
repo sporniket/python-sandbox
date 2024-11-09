@@ -34,8 +34,6 @@ TypeOfFragmentOfSourceCode = Enum(
         "FIELD__MNEMONIC",
         "FIELD__OPERANDS",
         "FIELD__COMMENTS",  #
-        "MNEMONIC__RADIX",
-        "MNEMONIC__SUFFIX",
     ],
 )
 
@@ -51,7 +49,7 @@ TypeOfFragmentOfSourceCode = Enum(
 class FragmentOfSourceCode(NodeRT):
     def __init__(
         self,
-        type: TypeOfFragmentOfSourceCode,
+        type,
         range: Interval,
         *,
         parent: NodeRT = None,
@@ -71,7 +69,7 @@ class FragmentOfSourceCode(NodeRT):
         self._absoluteRange = Interval(start, length=range.length)
 
     @property
-    def type(self) -> TypeOfFragmentOfSourceCode:
+    def type(self):
         return self._type
 
     @property
@@ -83,9 +81,9 @@ class FragmentOfSourceCode(NodeRT):
         return self._args
 
     @property
-    def absoluteStart(self) -> dict:
+    def absoluteStart(self) -> int:
         return self._absoluteRange.start
 
     @property
-    def absoluteEnd(self) -> dict:
+    def absoluteEnd(self) -> int:
         return self._absoluteRange.end

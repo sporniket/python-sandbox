@@ -23,6 +23,7 @@ from isa_m68k.assembly.static_parser import (
     FragmenterOfMnemonicField,
     FragmentOfSourceCode,
     TypeOfFragmentOfSourceCode,
+    TypeOfMnemonicPart,
 )
 from isa_m68k.py_models import Interval
 
@@ -55,7 +56,7 @@ def test__FragmenterOfMnemonicField_fragment__fragments_mnemonic_field_into_radi
     assert len(fragments) == 2
     thenFragmentMeetsExpectations(
         fragments[0],
-        TypeOfFragmentOfSourceCode.MNEMONIC__RADIX,
+        TypeOfMnemonicPart.MNEMONIC__RADIX,
         0,
         4,
         parent=mnemonicFragment,
@@ -63,7 +64,7 @@ def test__FragmenterOfMnemonicField_fragment__fragments_mnemonic_field_into_radi
     )
     thenFragmentMeetsExpectations(
         fragments[1],
-        TypeOfFragmentOfSourceCode.MNEMONIC__SUFFIX,
+        TypeOfMnemonicPart.MNEMONIC__SUFFIX,
         5,
         1,
         parent=mnemonicFragment,
