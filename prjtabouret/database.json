@@ -1,9 +1,541 @@
 {
     "GAL16V8_Registered": {
         "pins": null,
-        "specials": null,
+        "specials": {
+            "CLK": "C1",
+            "OE": "E1"
+        },
         "blocks": null,
-        "macrocells": null,
+        "macrocells": {
+            "MC1": {
+                "block": "A",
+                "pad": "M1",
+                "pterm_ranges": {
+                    "PT1": [
+                        0,
+                        32
+                    ],
+                    "PT2": [
+                        32,
+                        64
+                    ],
+                    "PT3": [
+                        64,
+                        96
+                    ],
+                    "PT4": [
+                        96,
+                        128
+                    ],
+                    "PT5": [
+                        128,
+                        160
+                    ],
+                    "PT6": [
+                        160,
+                        192
+                    ],
+                    "PT7": [
+                        192,
+                        224
+                    ],
+                    "PT8": [
+                        224,
+                        256
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2128,
+                    "PTD2": 2129,
+                    "PTD3": 2130,
+                    "PTD4": 2131,
+                    "PTD5": 2132,
+                    "PTD6": 2133,
+                    "PTD7": 2134,
+                    "PTD8": 2135
+                },
+                "configuration": {
+                    "fuses": [
+                        2120
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2048
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC2": {
+                "block": "A",
+                "pad": "M2",
+                "pterm_ranges": {
+                    "PT1": [
+                        256,
+                        288
+                    ],
+                    "PT2": [
+                        288,
+                        320
+                    ],
+                    "PT3": [
+                        320,
+                        352
+                    ],
+                    "PT4": [
+                        352,
+                        384
+                    ],
+                    "PT5": [
+                        384,
+                        416
+                    ],
+                    "PT6": [
+                        416,
+                        448
+                    ],
+                    "PT7": [
+                        448,
+                        480
+                    ],
+                    "PT8": [
+                        480,
+                        512
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2136,
+                    "PTD2": 2137,
+                    "PTD3": 2138,
+                    "PTD4": 2139,
+                    "PTD5": 2140,
+                    "PTD6": 2141,
+                    "PTD7": 2142,
+                    "PTD8": 2143
+                },
+                "configuration": {
+                    "fuses": [
+                        2121
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2049
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC3": {
+                "block": "A",
+                "pad": "M3",
+                "pterm_ranges": {
+                    "PT1": [
+                        512,
+                        544
+                    ],
+                    "PT2": [
+                        544,
+                        576
+                    ],
+                    "PT3": [
+                        576,
+                        608
+                    ],
+                    "PT4": [
+                        608,
+                        640
+                    ],
+                    "PT5": [
+                        640,
+                        672
+                    ],
+                    "PT6": [
+                        672,
+                        704
+                    ],
+                    "PT7": [
+                        704,
+                        736
+                    ],
+                    "PT8": [
+                        736,
+                        768
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2144,
+                    "PTD2": 2145,
+                    "PTD3": 2146,
+                    "PTD4": 2147,
+                    "PTD5": 2148,
+                    "PTD6": 2149,
+                    "PTD7": 2150,
+                    "PTD8": 2151
+                },
+                "configuration": {
+                    "fuses": [
+                        2122
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2050
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC4": {
+                "block": "A",
+                "pad": "M4",
+                "pterm_ranges": {
+                    "PT1": [
+                        768,
+                        800
+                    ],
+                    "PT2": [
+                        800,
+                        832
+                    ],
+                    "PT3": [
+                        832,
+                        864
+                    ],
+                    "PT4": [
+                        864,
+                        896
+                    ],
+                    "PT5": [
+                        896,
+                        928
+                    ],
+                    "PT6": [
+                        928,
+                        960
+                    ],
+                    "PT7": [
+                        960,
+                        992
+                    ],
+                    "PT8": [
+                        992,
+                        1024
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2152,
+                    "PTD2": 2153,
+                    "PTD3": 2154,
+                    "PTD4": 2155,
+                    "PTD5": 2156,
+                    "PTD6": 2157,
+                    "PTD7": 2158,
+                    "PTD8": 2159
+                },
+                "configuration": {
+                    "fuses": [
+                        2123
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2051
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC5": {
+                "block": "A",
+                "pad": "M5",
+                "pterm_ranges": {
+                    "PT1": [
+                        1024,
+                        1056
+                    ],
+                    "PT2": [
+                        1056,
+                        1088
+                    ],
+                    "PT3": [
+                        1088,
+                        1120
+                    ],
+                    "PT4": [
+                        1120,
+                        1152
+                    ],
+                    "PT5": [
+                        1152,
+                        1184
+                    ],
+                    "PT6": [
+                        1184,
+                        1216
+                    ],
+                    "PT7": [
+                        1216,
+                        1248
+                    ],
+                    "PT8": [
+                        1248,
+                        1280
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2160,
+                    "PTD2": 2161,
+                    "PTD3": 2162,
+                    "PTD4": 2163,
+                    "PTD5": 2164,
+                    "PTD6": 2165,
+                    "PTD7": 2166,
+                    "PTD8": 2167
+                },
+                "configuration": {
+                    "fuses": [
+                        2124
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2052
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC6": {
+                "block": "A",
+                "pad": "M6",
+                "pterm_ranges": {
+                    "PT1": [
+                        1280,
+                        1312
+                    ],
+                    "PT2": [
+                        1312,
+                        1344
+                    ],
+                    "PT3": [
+                        1344,
+                        1376
+                    ],
+                    "PT4": [
+                        1376,
+                        1408
+                    ],
+                    "PT5": [
+                        1408,
+                        1440
+                    ],
+                    "PT6": [
+                        1440,
+                        1472
+                    ],
+                    "PT7": [
+                        1472,
+                        1504
+                    ],
+                    "PT8": [
+                        1504,
+                        1536
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2168,
+                    "PTD2": 2169,
+                    "PTD3": 2170,
+                    "PTD4": 2171,
+                    "PTD5": 2172,
+                    "PTD6": 2173,
+                    "PTD7": 2174,
+                    "PTD8": 2175
+                },
+                "configuration": {
+                    "fuses": [
+                        2125
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2053
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC7": {
+                "block": "A",
+                "pad": "M7",
+                "pterm_ranges": {
+                    "PT1": [
+                        1536,
+                        1568
+                    ],
+                    "PT2": [
+                        1568,
+                        1600
+                    ],
+                    "PT3": [
+                        1600,
+                        1632
+                    ],
+                    "PT4": [
+                        1632,
+                        1664
+                    ],
+                    "PT5": [
+                        1664,
+                        1696
+                    ],
+                    "PT6": [
+                        1696,
+                        1728
+                    ],
+                    "PT7": [
+                        1728,
+                        1760
+                    ],
+                    "PT8": [
+                        1760,
+                        1792
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2176,
+                    "PTD2": 2177,
+                    "PTD3": 2178,
+                    "PTD4": 2179,
+                    "PTD5": 2180,
+                    "PTD6": 2181,
+                    "PTD7": 2182,
+                    "PTD8": 2183
+                },
+                "configuration": {
+                    "fuses": [
+                        2126
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2054
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC8": {
+                "block": "A",
+                "pad": "M8",
+                "pterm_ranges": {
+                    "PT1": [
+                        1792,
+                        1824
+                    ],
+                    "PT2": [
+                        1824,
+                        1856
+                    ],
+                    "PT3": [
+                        1856,
+                        1888
+                    ],
+                    "PT4": [
+                        1888,
+                        1920
+                    ],
+                    "PT5": [
+                        1920,
+                        1952
+                    ],
+                    "PT6": [
+                        1952,
+                        1984
+                    ],
+                    "PT7": [
+                        1984,
+                        2016
+                    ],
+                    "PT8": [
+                        2016,
+                        2048
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2184,
+                    "PTD2": 2185,
+                    "PTD3": 2186,
+                    "PTD4": 2187,
+                    "PTD5": 2188,
+                    "PTD6": 2189,
+                    "PTD7": 2190,
+                    "PTD8": 2191
+                },
+                "configuration": {
+                    "fuses": [
+                        2127
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2055
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            }
+        },
         "switches": {
             "UIM0": {
                 "block": "A",
@@ -2516,9 +3048,538 @@
     },
     "GAL16V8_Complex": {
         "pins": null,
-        "specials": null,
+        "specials": {},
         "blocks": null,
-        "macrocells": null,
+        "macrocells": {
+            "MC1": {
+                "block": "A",
+                "pad": "M1",
+                "pterm_ranges": {
+                    "PT1": [
+                        0,
+                        32
+                    ],
+                    "PT2": [
+                        32,
+                        64
+                    ],
+                    "PT3": [
+                        64,
+                        96
+                    ],
+                    "PT4": [
+                        96,
+                        128
+                    ],
+                    "PT5": [
+                        128,
+                        160
+                    ],
+                    "PT6": [
+                        160,
+                        192
+                    ],
+                    "PT7": [
+                        192,
+                        224
+                    ],
+                    "PT8": [
+                        224,
+                        256
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2128,
+                    "PTD2": 2129,
+                    "PTD3": 2130,
+                    "PTD4": 2131,
+                    "PTD5": 2132,
+                    "PTD6": 2133,
+                    "PTD7": 2134,
+                    "PTD8": 2135
+                },
+                "configuration": {
+                    "fuses": [
+                        2120
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2048
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC2": {
+                "block": "A",
+                "pad": "M2",
+                "pterm_ranges": {
+                    "PT1": [
+                        256,
+                        288
+                    ],
+                    "PT2": [
+                        288,
+                        320
+                    ],
+                    "PT3": [
+                        320,
+                        352
+                    ],
+                    "PT4": [
+                        352,
+                        384
+                    ],
+                    "PT5": [
+                        384,
+                        416
+                    ],
+                    "PT6": [
+                        416,
+                        448
+                    ],
+                    "PT7": [
+                        448,
+                        480
+                    ],
+                    "PT8": [
+                        480,
+                        512
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2136,
+                    "PTD2": 2137,
+                    "PTD3": 2138,
+                    "PTD4": 2139,
+                    "PTD5": 2140,
+                    "PTD6": 2141,
+                    "PTD7": 2142,
+                    "PTD8": 2143
+                },
+                "configuration": {
+                    "fuses": [
+                        2121
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2049
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC3": {
+                "block": "A",
+                "pad": "M3",
+                "pterm_ranges": {
+                    "PT1": [
+                        512,
+                        544
+                    ],
+                    "PT2": [
+                        544,
+                        576
+                    ],
+                    "PT3": [
+                        576,
+                        608
+                    ],
+                    "PT4": [
+                        608,
+                        640
+                    ],
+                    "PT5": [
+                        640,
+                        672
+                    ],
+                    "PT6": [
+                        672,
+                        704
+                    ],
+                    "PT7": [
+                        704,
+                        736
+                    ],
+                    "PT8": [
+                        736,
+                        768
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2144,
+                    "PTD2": 2145,
+                    "PTD3": 2146,
+                    "PTD4": 2147,
+                    "PTD5": 2148,
+                    "PTD6": 2149,
+                    "PTD7": 2150,
+                    "PTD8": 2151
+                },
+                "configuration": {
+                    "fuses": [
+                        2122
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2050
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC4": {
+                "block": "A",
+                "pad": "M4",
+                "pterm_ranges": {
+                    "PT1": [
+                        768,
+                        800
+                    ],
+                    "PT2": [
+                        800,
+                        832
+                    ],
+                    "PT3": [
+                        832,
+                        864
+                    ],
+                    "PT4": [
+                        864,
+                        896
+                    ],
+                    "PT5": [
+                        896,
+                        928
+                    ],
+                    "PT6": [
+                        928,
+                        960
+                    ],
+                    "PT7": [
+                        960,
+                        992
+                    ],
+                    "PT8": [
+                        992,
+                        1024
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2152,
+                    "PTD2": 2153,
+                    "PTD3": 2154,
+                    "PTD4": 2155,
+                    "PTD5": 2156,
+                    "PTD6": 2157,
+                    "PTD7": 2158,
+                    "PTD8": 2159
+                },
+                "configuration": {
+                    "fuses": [
+                        2123
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2051
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC5": {
+                "block": "A",
+                "pad": "M5",
+                "pterm_ranges": {
+                    "PT1": [
+                        1024,
+                        1056
+                    ],
+                    "PT2": [
+                        1056,
+                        1088
+                    ],
+                    "PT3": [
+                        1088,
+                        1120
+                    ],
+                    "PT4": [
+                        1120,
+                        1152
+                    ],
+                    "PT5": [
+                        1152,
+                        1184
+                    ],
+                    "PT6": [
+                        1184,
+                        1216
+                    ],
+                    "PT7": [
+                        1216,
+                        1248
+                    ],
+                    "PT8": [
+                        1248,
+                        1280
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2160,
+                    "PTD2": 2161,
+                    "PTD3": 2162,
+                    "PTD4": 2163,
+                    "PTD5": 2164,
+                    "PTD6": 2165,
+                    "PTD7": 2166,
+                    "PTD8": 2167
+                },
+                "configuration": {
+                    "fuses": [
+                        2124
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2052
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC6": {
+                "block": "A",
+                "pad": "M6",
+                "pterm_ranges": {
+                    "PT1": [
+                        1280,
+                        1312
+                    ],
+                    "PT2": [
+                        1312,
+                        1344
+                    ],
+                    "PT3": [
+                        1344,
+                        1376
+                    ],
+                    "PT4": [
+                        1376,
+                        1408
+                    ],
+                    "PT5": [
+                        1408,
+                        1440
+                    ],
+                    "PT6": [
+                        1440,
+                        1472
+                    ],
+                    "PT7": [
+                        1472,
+                        1504
+                    ],
+                    "PT8": [
+                        1504,
+                        1536
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2168,
+                    "PTD2": 2169,
+                    "PTD3": 2170,
+                    "PTD4": 2171,
+                    "PTD5": 2172,
+                    "PTD6": 2173,
+                    "PTD7": 2174,
+                    "PTD8": 2175
+                },
+                "configuration": {
+                    "fuses": [
+                        2125
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2053
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC7": {
+                "block": "A",
+                "pad": "M7",
+                "pterm_ranges": {
+                    "PT1": [
+                        1536,
+                        1568
+                    ],
+                    "PT2": [
+                        1568,
+                        1600
+                    ],
+                    "PT3": [
+                        1600,
+                        1632
+                    ],
+                    "PT4": [
+                        1632,
+                        1664
+                    ],
+                    "PT5": [
+                        1664,
+                        1696
+                    ],
+                    "PT6": [
+                        1696,
+                        1728
+                    ],
+                    "PT7": [
+                        1728,
+                        1760
+                    ],
+                    "PT8": [
+                        1760,
+                        1792
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2176,
+                    "PTD2": 2177,
+                    "PTD3": 2178,
+                    "PTD4": 2179,
+                    "PTD5": 2180,
+                    "PTD6": 2181,
+                    "PTD7": 2182,
+                    "PTD8": 2183
+                },
+                "configuration": {
+                    "fuses": [
+                        2126
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2054
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC8": {
+                "block": "A",
+                "pad": "M8",
+                "pterm_ranges": {
+                    "PT1": [
+                        1792,
+                        1824
+                    ],
+                    "PT2": [
+                        1824,
+                        1856
+                    ],
+                    "PT3": [
+                        1856,
+                        1888
+                    ],
+                    "PT4": [
+                        1888,
+                        1920
+                    ],
+                    "PT5": [
+                        1920,
+                        1952
+                    ],
+                    "PT6": [
+                        1952,
+                        1984
+                    ],
+                    "PT7": [
+                        1984,
+                        2016
+                    ],
+                    "PT8": [
+                        2016,
+                        2048
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2184,
+                    "PTD2": 2185,
+                    "PTD3": 2186,
+                    "PTD4": 2187,
+                    "PTD5": 2188,
+                    "PTD6": 2189,
+                    "PTD7": 2190,
+                    "PTD8": 2191
+                },
+                "configuration": {
+                    "fuses": [
+                        2127
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2055
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            }
+        },
         "switches": {
             "UIM0": {
                 "block": "A",
@@ -5031,9 +6092,538 @@
     },
     "GAL16V8_Simple": {
         "pins": null,
-        "specials": null,
+        "specials": {},
         "blocks": null,
-        "macrocells": null,
+        "macrocells": {
+            "MC1": {
+                "block": "A",
+                "pad": "M1",
+                "pterm_ranges": {
+                    "PT1": [
+                        0,
+                        32
+                    ],
+                    "PT2": [
+                        32,
+                        64
+                    ],
+                    "PT3": [
+                        64,
+                        96
+                    ],
+                    "PT4": [
+                        96,
+                        128
+                    ],
+                    "PT5": [
+                        128,
+                        160
+                    ],
+                    "PT6": [
+                        160,
+                        192
+                    ],
+                    "PT7": [
+                        192,
+                        224
+                    ],
+                    "PT8": [
+                        224,
+                        256
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2128,
+                    "PTD2": 2129,
+                    "PTD3": 2130,
+                    "PTD4": 2131,
+                    "PTD5": 2132,
+                    "PTD6": 2133,
+                    "PTD7": 2134,
+                    "PTD8": 2135
+                },
+                "configuration": {
+                    "fuses": [
+                        2120
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2048
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC2": {
+                "block": "A",
+                "pad": "M2",
+                "pterm_ranges": {
+                    "PT1": [
+                        256,
+                        288
+                    ],
+                    "PT2": [
+                        288,
+                        320
+                    ],
+                    "PT3": [
+                        320,
+                        352
+                    ],
+                    "PT4": [
+                        352,
+                        384
+                    ],
+                    "PT5": [
+                        384,
+                        416
+                    ],
+                    "PT6": [
+                        416,
+                        448
+                    ],
+                    "PT7": [
+                        448,
+                        480
+                    ],
+                    "PT8": [
+                        480,
+                        512
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2136,
+                    "PTD2": 2137,
+                    "PTD3": 2138,
+                    "PTD4": 2139,
+                    "PTD5": 2140,
+                    "PTD6": 2141,
+                    "PTD7": 2142,
+                    "PTD8": 2143
+                },
+                "configuration": {
+                    "fuses": [
+                        2121
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2049
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC3": {
+                "block": "A",
+                "pad": "M3",
+                "pterm_ranges": {
+                    "PT1": [
+                        512,
+                        544
+                    ],
+                    "PT2": [
+                        544,
+                        576
+                    ],
+                    "PT3": [
+                        576,
+                        608
+                    ],
+                    "PT4": [
+                        608,
+                        640
+                    ],
+                    "PT5": [
+                        640,
+                        672
+                    ],
+                    "PT6": [
+                        672,
+                        704
+                    ],
+                    "PT7": [
+                        704,
+                        736
+                    ],
+                    "PT8": [
+                        736,
+                        768
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2144,
+                    "PTD2": 2145,
+                    "PTD3": 2146,
+                    "PTD4": 2147,
+                    "PTD5": 2148,
+                    "PTD6": 2149,
+                    "PTD7": 2150,
+                    "PTD8": 2151
+                },
+                "configuration": {
+                    "fuses": [
+                        2122
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2050
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC4": {
+                "block": "A",
+                "pad": "M4",
+                "pterm_ranges": {
+                    "PT1": [
+                        768,
+                        800
+                    ],
+                    "PT2": [
+                        800,
+                        832
+                    ],
+                    "PT3": [
+                        832,
+                        864
+                    ],
+                    "PT4": [
+                        864,
+                        896
+                    ],
+                    "PT5": [
+                        896,
+                        928
+                    ],
+                    "PT6": [
+                        928,
+                        960
+                    ],
+                    "PT7": [
+                        960,
+                        992
+                    ],
+                    "PT8": [
+                        992,
+                        1024
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2152,
+                    "PTD2": 2153,
+                    "PTD3": 2154,
+                    "PTD4": 2155,
+                    "PTD5": 2156,
+                    "PTD6": 2157,
+                    "PTD7": 2158,
+                    "PTD8": 2159
+                },
+                "configuration": {
+                    "fuses": [
+                        2123
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2051
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC5": {
+                "block": "A",
+                "pad": "M5",
+                "pterm_ranges": {
+                    "PT1": [
+                        1024,
+                        1056
+                    ],
+                    "PT2": [
+                        1056,
+                        1088
+                    ],
+                    "PT3": [
+                        1088,
+                        1120
+                    ],
+                    "PT4": [
+                        1120,
+                        1152
+                    ],
+                    "PT5": [
+                        1152,
+                        1184
+                    ],
+                    "PT6": [
+                        1184,
+                        1216
+                    ],
+                    "PT7": [
+                        1216,
+                        1248
+                    ],
+                    "PT8": [
+                        1248,
+                        1280
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2160,
+                    "PTD2": 2161,
+                    "PTD3": 2162,
+                    "PTD4": 2163,
+                    "PTD5": 2164,
+                    "PTD6": 2165,
+                    "PTD7": 2166,
+                    "PTD8": 2167
+                },
+                "configuration": {
+                    "fuses": [
+                        2124
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2052
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC6": {
+                "block": "A",
+                "pad": "M6",
+                "pterm_ranges": {
+                    "PT1": [
+                        1280,
+                        1312
+                    ],
+                    "PT2": [
+                        1312,
+                        1344
+                    ],
+                    "PT3": [
+                        1344,
+                        1376
+                    ],
+                    "PT4": [
+                        1376,
+                        1408
+                    ],
+                    "PT5": [
+                        1408,
+                        1440
+                    ],
+                    "PT6": [
+                        1440,
+                        1472
+                    ],
+                    "PT7": [
+                        1472,
+                        1504
+                    ],
+                    "PT8": [
+                        1504,
+                        1536
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2168,
+                    "PTD2": 2169,
+                    "PTD3": 2170,
+                    "PTD4": 2171,
+                    "PTD5": 2172,
+                    "PTD6": 2173,
+                    "PTD7": 2174,
+                    "PTD8": 2175
+                },
+                "configuration": {
+                    "fuses": [
+                        2125
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2053
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC7": {
+                "block": "A",
+                "pad": "M7",
+                "pterm_ranges": {
+                    "PT1": [
+                        1536,
+                        1568
+                    ],
+                    "PT2": [
+                        1568,
+                        1600
+                    ],
+                    "PT3": [
+                        1600,
+                        1632
+                    ],
+                    "PT4": [
+                        1632,
+                        1664
+                    ],
+                    "PT5": [
+                        1664,
+                        1696
+                    ],
+                    "PT6": [
+                        1696,
+                        1728
+                    ],
+                    "PT7": [
+                        1728,
+                        1760
+                    ],
+                    "PT8": [
+                        1760,
+                        1792
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2176,
+                    "PTD2": 2177,
+                    "PTD3": 2178,
+                    "PTD4": 2179,
+                    "PTD5": 2180,
+                    "PTD6": 2181,
+                    "PTD7": 2182,
+                    "PTD8": 2183
+                },
+                "configuration": {
+                    "fuses": [
+                        2126
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2054
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            },
+            "MC8": {
+                "block": "A",
+                "pad": "M8",
+                "pterm_ranges": {
+                    "PT1": [
+                        1792,
+                        1824
+                    ],
+                    "PT2": [
+                        1824,
+                        1856
+                    ],
+                    "PT3": [
+                        1856,
+                        1888
+                    ],
+                    "PT4": [
+                        1888,
+                        1920
+                    ],
+                    "PT5": [
+                        1920,
+                        1952
+                    ],
+                    "PT6": [
+                        1952,
+                        1984
+                    ],
+                    "PT7": [
+                        1984,
+                        2016
+                    ],
+                    "PT8": [
+                        2016,
+                        2048
+                    ]
+                },
+                "pterm_disables": {
+                    "PTD1": 2184,
+                    "PTD2": 2185,
+                    "PTD3": 2186,
+                    "PTD4": 2187,
+                    "PTD5": 2188,
+                    "PTD6": 2189,
+                    "PTD7": 2190,
+                    "PTD8": 2191
+                },
+                "configuration": {
+                    "fuses": [
+                        2127
+                    ],
+                    "values": {
+                        "registered": 0,
+                        "combinatorial": 1
+                    }
+                },
+                "polarity": {
+                    "fuses": [
+                        2055
+                    ],
+                    "values": {
+                        "active low": 0,
+                        "active high": 1
+                    }
+                }
+            }
+        },
         "switches": {
             "UIM0": {
                 "block": "A",
