@@ -74,6 +74,16 @@ def initSpecials(x):
     x["GAL16V8_Simple"]["specials"]={
     }
 
+
+def initPins(x):
+    x["pins"] = {}
+    for pkg in ["DIP20","PLCC20"]:
+        x["pins"][pkg] = {"C1":1} # pin 1 is Clock --> special pad C1
+        x["pins"][pkg].update({f"I{j}":j for j in range(2,10)})
+        x["pins"][pkg].update({"E1":11}) # pin 11 is Output Enable --> special pad E1
+        x["pins"][pkg].update({f"M{8-j}":12+j for j in range(0,8)})
+
+
 if __name__ == '__main__':
     targetFileName="database"
     print(f"generate {targetFileName}.json ...")
@@ -97,6 +107,10 @@ if __name__ == '__main__':
 
     # 5
     initSpecials(result)
+
+    # 7
+    for specs in [["GAL16V8_Registered"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
+        initPins(result[specs[0]])
 
     # save to file
     with open(f"./{targetFileName}.json", encoding="utf-8", mode="w") as f:
