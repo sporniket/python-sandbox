@@ -6,7 +6,12 @@ import sys
 def initStructRoot(x):
     for n in ["GAL16V8_Registered","GAL16V8_Complex","GAL16V8_Simple"]:
         x[n] = {}
-        for s in ["pins","specials","blocks", "macrocells","switches","globals"]:
+        for s in [
+            "pins","specials",
+            # "blocks",
+            "macrocells",
+            "switches","globals"
+        ]:
             x[n][s] = None
 
 def initGlobals(x, modeName, modeValue):
@@ -25,7 +30,7 @@ def initSwitches(x):
     def makeUimBody(i):
         offset = 32 * i
         return {
-            "block": "A",
+            #"block": "A",
             "mux": {
                 "fuses": [f+offset for f in range(0,32)]
             }
@@ -39,7 +44,7 @@ def initMacroCells(x):
         ptdOffset=2128 + 8*i
 
         x["macrocells"][f"MC{i+1}"] = {
-            "block":"A",
+            # "block":"A",
             "pad":f"M{i+1}",
             "pterm_ranges":{f"PT{j+1}":[ptermsOffset+32*j,ptermsOffset+32*(j+1)] for j in range(0,8)},
             "pterm_disables":{f"PTD{j+1}":ptdOffset+j for j in range(0,8)},
