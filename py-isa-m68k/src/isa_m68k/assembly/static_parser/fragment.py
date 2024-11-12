@@ -87,3 +87,9 @@ class FragmentOfSourceCode(NodeRT):
     @property
     def absoluteEnd(self) -> int:
         return self._absoluteRange.end
+
+
+def prepareSourceFragment(charStream: str) -> FragmentOfSourceCode:
+    return FragmentOfSourceCode(
+        TypeOfFragmentOfSourceCode.SOURCE_FILE, Interval(0, length=len(charStream))
+    )

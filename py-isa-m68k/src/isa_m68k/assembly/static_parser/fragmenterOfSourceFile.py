@@ -31,11 +31,10 @@ class FragmenterOfSourceFile:
     def __init__(self):
         pass
 
-    def fragment(self, charStream: str) -> list[FragmentOfSourceCode]:
+    def fragment(
+        self, rootFragment: FragmentOfSourceCode, charStream: str
+    ) -> list[FragmentOfSourceCode]:
         sizeOfStream = len(charStream)
-        rootFragment = FragmentOfSourceCode(
-            TypeOfFragmentOfSourceCode.SOURCE_FILE, Interval(0, length=sizeOfStream)
-        )
         result = []
         mark = 0
 

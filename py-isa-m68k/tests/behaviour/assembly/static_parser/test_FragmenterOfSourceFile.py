@@ -20,6 +20,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 """
 
 from isa_m68k.assembly.static_parser import (
+    prepareSourceFragment,
     FragmenterOfSourceFile,
     FragmentOfSourceCode,
     TypeOfFragmentOfSourceCode,
@@ -29,8 +30,7 @@ from .utils import thenFragmentMeetsExpectations
 
 
 def test__FragmenterOfSourceFile_fragment__fragments_source_into_lines():
-    fragments = FragmenterOfSourceFile().fragment(
-        """** 
+    source = """** 
 * A minimal program for Atari ST.
 *
 * Just a call to Pterm0() to terminate immediately.
@@ -38,7 +38,8 @@ def test__FragmenterOfSourceFile_fragment__fragments_source_into_lines():
 
                 move.w  #0,-(sp) ; GEMDOS function code 0 = Pterm0()
                 trap    #1      ; Call GEMDOS"""
-    )
+    sourceFragment = prepareSourceFragment(source)
+    fragments = FragmenterOfSourceFile().fragment(sourceFragment, source)
 
     assert len(fragments) == 7
 

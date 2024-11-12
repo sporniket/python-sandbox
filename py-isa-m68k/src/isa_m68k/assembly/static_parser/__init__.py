@@ -19,12 +19,17 @@ If not, see <https://www.gnu.org/licenses/>. 
 ---
 """
 
-from .fragment import TypeOfFragmentOfSourceCode, FragmentOfSourceCode
+from .fragment import (
+    TypeOfFragmentOfSourceCode,
+    FragmentOfSourceCode,
+    prepareSourceFragment,
+)
 from .fragmenterOfMnemonicField import FragmenterOfMnemonicField, TypeOfMnemonicPart
 from .fragmenterOfSourceFile import FragmenterOfSourceFile
 from .fragmenterOfStatementLine import FragmenterOfStatementLine
 
 __all__ = [
+    "prepareSourceFragment",
     "TypeOfFragmentOfSourceCode",
     "TypeOfMnemonicPart",
     "FragmentOfSourceCode",
