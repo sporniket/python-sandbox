@@ -32,10 +32,9 @@ class FragmenterOfSourceFile:
         pass
 
     def fragment(
-        self, rootFragment: FragmentOfSourceCode, charStream: str
+        self, source: FragmentOfSourceCode, charStream: str
     ) -> list[FragmentOfSourceCode]:
         sizeOfStream = len(charStream)
-        result = []
         mark = 0
 
         def processLine(line):
@@ -50,9 +49,8 @@ class FragmenterOfSourceFile:
                         else TypeOfFragmentOfSourceCode.LINE__STATEMENT
                     ),
                     range,
-                    parent=rootFragment,
+                    parent=source,
                 )
-                result.append(fragment)
 
         def process(i, c):
             nonlocal mark
@@ -65,4 +63,4 @@ class FragmenterOfSourceFile:
             process(i, c)
         if mark < sizeOfStream - 1:
             processLine(charStream[mark:].rstrip())
-        return result
+        return source.children
