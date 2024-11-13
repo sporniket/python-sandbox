@@ -75,13 +75,16 @@ def initSpecials(x):
     }
 
 
-def initPins(x):
+def initPins(x,*, pin1:str="I1", pin11:str = "I10"):
     x["pins"] = {}
     for pkg in ["DIP20","PLCC20"]:
-        x["pins"][pkg] = {"C1":1} # pin 1 is Clock --> special pad C1
-        x["pins"][pkg].update({f"I{j}":j for j in range(2,10)})
-        x["pins"][pkg].update({"E1":11}) # pin 11 is Output Enable --> special pad E1
-        x["pins"][pkg].update({f"M{8-j}":12+j for j in range(0,8)})
+        # DIP and PLCC have in fact the same mapping
+        # Each physical pin is wired to a given pad
+        # Pin 1 and 11 have specific setups
+        x["pins"][pkg] = {1:pin1}
+        x["pins"][pkg].update({j:f"I{j}" for j in range(2,10)})
+        x["pins"][pkg].update({11:pin11}) 
+        x["pins"][pkg].update({12+j:f"M{8-j}" for j in range(0,8)})
 
 
 if __name__ == '__main__':
@@ -109,8 +112,11 @@ if __name__ == '__main__':
     initSpecials(result)
 
     # 7
-    for specs in [["GAL16V8_Registered"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
-        initPins(result[specs[0]])
+    for specs in [["GAL16V8_Registered","CLK","OE"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
+        if len(specs)>1:
+            initPins(result[specs[0]],pin1=specs[1],pin11=specs[2])
+        else:
+            initPins(result[specs[0]])
 
     # save to file
     with open(f"./{targetFileName}.json", encoding="utf-8", mode="w") as f:
