@@ -7,7 +7,8 @@ def initStructRoot(x):
     for n in ["GAL16V8_Registered","GAL16V8_Complex","GAL16V8_Simple"]:
         x[n] = {}
         for s in [
-            "pins","specials",
+            "pins",
+            # "specials",
             # "blocks",
             "macrocells",
             "switches","globals"
@@ -16,6 +17,7 @@ def initStructRoot(x):
 
 def initGlobals(x, modeName, modeValue):
     x["globals"] = {
+        "__doc__":[f"# Global configuration fuses setting for '{modeName}'"],
         "mode":{ # AC1 fuse
             "fuses":[2192, 2193], # SYN, AC0
             "values":{
@@ -26,25 +28,46 @@ def initGlobals(x, modeName, modeValue):
         }
     }
 
-def initSwitches(x):
-    def makeUimBody(i):
-        offset = 32 * i
-        return {
-            #"block": "A",
-            "mux": {
-                "fuses": [f+offset for f in range(0,32)]
-            }
+def initArray(x):
+    x["array"] = {
+        "__doc__":[
+            "# Entries of the AND Array",
+            "",
+            "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
+            "",
+            "Each entry value (normal and inverted) is connected to a column of the AND Array, and is fed by a pad or the feedback of the macrocells.",
+        ]
+    }
+    def makeEntry(x, name:str, offsetNormal:int, source:str):
+        x[name] = {
+            "offsetNormal":offsetNormal,
+            "offsetInverted":offsetNormal+1,
+            "source":source
         }
-    x["switches"] = {f"UIM{i}":makeUimBody(i) for i in range(0,64)}
+    
+    for specs in [
+        ["E1", 0, ]
+    ]:
+        # HERE TODO
+        pass
 
 def initMacroCells(x):
-    x["macrocells"] = {}
+    x["macrocells"] = {
+        "__doc__":[
+            "# Description of each macrocell",
+            "",
+            "* **pad name** : for most pins, where the inputs and output pins physically connect to the dye ; for pins 1 and 11, it will designate a named net that will be either the 'normal' input, either the special net like 'clock' or 'output enable'.",
+            "* **pterm ranges** : for each of the 8 product terms that are inputs of a given macro cell, the range of 32 fuses that control each term.",
+            "* **pterm disable** : for each of the 8 product terms that are inputs of a given macro cell, the fuse that disable said product term.",
+            "* **configuration fuse** : each cell has a local configuration fuse to change its behaviour.",
+            "* **polarity** : fuse to setup whether the output is active high or low, in other word, normal or inverted output."
+        ]
+    }
     for i in range(0,8):
         ptermsOffset = 256 * i
         ptdOffset=2128 + 8*i
 
         x["macrocells"][f"MC{i+1}"] = {
-            # "block":"A",
             "pad":f"M{i+1}",
             "pterm_ranges":{f"PT{j+1}":[ptermsOffset+32*j,ptermsOffset+32*(j+1)] for j in range(0,8)},
             "pterm_disables":{f"PTD{j+1}":ptdOffset+j for j in range(0,8)},
@@ -64,19 +87,14 @@ def initMacroCells(x):
             }
         }
 
-def initSpecials(x):
-    x["GAL16V8_Registered"]["specials"]={
-      "CLK":"C1",
-      "OE":"E1"
-    }
-    x["GAL16V8_Complex"]["specials"]={
-    }
-    x["GAL16V8_Simple"]["specials"]={
-    }
-
-
 def initPins(x,*, pin1:str="I1", pin11:str = "I10"):
-    x["pins"] = {}
+    x["pins"] = {
+        "__doc__":[
+            "# Mapping of physical pin index to a pad name",
+            "",
+            "VCC and GND are dropped as the play no role in the logic."
+        ]
+    }
     for pkg in ["DIP20","PLCC20"]:
         # DIP and PLCC have in fact the same mapping
         # Each physical pin is wired to a given pad
@@ -93,7 +111,13 @@ if __name__ == '__main__':
     print()
 
     # 1.
-    result = {}
+    result = {
+        "__doc__":[
+            "# Database for the GAL16v8 PLD",
+            "",
+            "Each item describe a global configuration of the device, namely the 'registered' mode, the 'complex' mode and the 'simple' mode."
+        ]
+    }
     initStructRoot(result)    
 
     # 2.
@@ -102,14 +126,11 @@ if __name__ == '__main__':
 
     # 3.
     for specs in [["GAL16V8_Registered"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
-        initSwitches(result[specs[0]])
+        initArray(result[specs[0]])
 
     # 4.
     for specs in [["GAL16V8_Registered"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
         initMacroCells(result[specs[0]])
-
-    # 5
-    initSpecials(result)
 
     # 7
     for specs in [["GAL16V8_Registered","CLK","OE"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
