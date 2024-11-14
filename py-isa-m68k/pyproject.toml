@@ -5,7 +5,7 @@ description = "Toolbox for the Motorola 68k Instruction Set Architecture"
 authors = [
     {name = "Sporniket", email = "sporniket.studio@gmail.com"},
 ]
-dependencies = []
+dependencies = ["py-models-by-sporniket<2"]
 requires-python = ">= 3.9"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}

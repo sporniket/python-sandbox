@@ -21,7 +21,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from enum import Enum
 from typing import List
-from ...py_models import Interval
+from py_models import Interval
 
 from .fragment import TypeOfFragmentOfSourceCode, FragmentOfSourceCode
 from .setOfChars import MARKERS__COMMENT

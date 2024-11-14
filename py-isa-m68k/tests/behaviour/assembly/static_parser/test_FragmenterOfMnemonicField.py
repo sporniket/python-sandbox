@@ -25,7 +25,7 @@ from isa_m68k.assembly.static_parser import (
     TypeOfFragmentOfSourceCode,
     TypeOfMnemonicPart,
 )
-from isa_m68k.py_models import Interval
+from py_models import Interval
 
 
 from .utils import thenFragmentMeetsExpectations

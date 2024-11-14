@@ -21,7 +21,7 @@ If not, see <https://www.gnu.org/licenses/>. 
 
 from enum import Enum
 from typing import List
-from ...py_models import Interval, NodeRT
+from py_models import Interval, NodeRT
 
 
 TypeOfFragmentOfSourceCode = Enum(
