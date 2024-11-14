@@ -7,9 +7,13 @@
     "GAL16V8_Registered": {
         "pins": {
             "__doc__": [
-                "# Mapping of physical pin index to a pad name",
+                "# Mapping of physical pin index to a net name",
                 "",
-                "VCC and GND are dropped as the play no role in the logic."
+                "A **pad** is where the inputs and output pins physically connect to the dye.",
+                "For most pins, the pad is linked to a unique net (input or macrocell output).",
+                "For pins 1 and 11, depending on the global configuration of the PLD can drive an input net or a special net (clock and output enable), thus their mappings will change between those configurations.",
+                "",
+                "VCC and GND are dropped as they play no role in the logic."
             ],
             "DIP20": {
                 "1": "CLK",
@@ -56,14 +60,14 @@
             "__doc__": [
                 "# Description of each macrocell",
                 "",
-                "* **pad name** : for most pins, where the inputs and output pins physically connect to the dye ; for pins 1 and 11, it will designate a named net that will be either the 'normal' input, either the special net like 'clock' or 'output enable'.",
+                "* **net name** : the net name that may be wired to the output of the macrocell.",
                 "* **pterm ranges** : for each of the 8 product terms that are inputs of a given macro cell, the range of 32 fuses that control each term.",
                 "* **pterm disable** : for each of the 8 product terms that are inputs of a given macro cell, the fuse that disable said product term.",
                 "* **configuration fuse** : each cell has a local configuration fuse to change its behaviour.",
                 "* **polarity** : fuse to setup whether the output is active high or low, in other word, normal or inverted output."
             ],
             "MC1": {
-                "pad": "M1",
+                "net_name": "M1",
                 "pterm_ranges": {
                     "PT1": [
                         0,
@@ -128,7 +132,7 @@
                 }
             },
             "MC2": {
-                "pad": "M2",
+                "net_name": "M2",
                 "pterm_ranges": {
                     "PT1": [
                         256,
@@ -193,7 +197,7 @@
                 }
             },
             "MC3": {
-                "pad": "M3",
+                "net_name": "M3",
                 "pterm_ranges": {
                     "PT1": [
                         512,
@@ -258,7 +262,7 @@
                 }
             },
             "MC4": {
-                "pad": "M4",
+                "net_name": "M4",
                 "pterm_ranges": {
                     "PT1": [
                         768,
@@ -323,7 +327,7 @@
                 }
             },
             "MC5": {
-                "pad": "M5",
+                "net_name": "M5",
                 "pterm_ranges": {
                     "PT1": [
                         1024,
@@ -388,7 +392,7 @@
                 }
             },
             "MC6": {
-                "pad": "M6",
+                "net_name": "M6",
                 "pterm_ranges": {
                     "PT1": [
                         1280,
@@ -453,7 +457,7 @@
                 }
             },
             "MC7": {
-                "pad": "M7",
+                "net_name": "M7",
                 "pterm_ranges": {
                     "PT1": [
                         1536,
@@ -518,7 +522,7 @@
                 }
             },
             "MC8": {
-                "pad": "M8",
+                "net_name": "M8",
                 "pterm_ranges": {
                     "PT1": [
                         1792,
@@ -583,7 +587,98 @@
                 }
             }
         },
-        "switches": null,
+        "array": {
+            "__doc__": [
+                "# Entries of the AND Array",
+                "",
+                "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
+                "For each entry, the offset in a line of the AND array is given for the normal and the inverted value.",
+                "",
+                "Each entry value (normal and inverted) is fed by a pad or the feedback of the macrocells.",
+                "",
+                "The entries are indexed like the pins of a package, in counter-clockwise manner, from 1 to 16, 1 being at the top-left."
+            ],
+            "E1": {
+                "offsetNormal": 0,
+                "offsetInverted": 1,
+                "source": "I2"
+            },
+            "E2": {
+                "offsetNormal": 4,
+                "offsetInverted": 5,
+                "source": "I3"
+            },
+            "E3": {
+                "offsetNormal": 8,
+                "offsetInverted": 9,
+                "source": "I4"
+            },
+            "E4": {
+                "offsetNormal": 12,
+                "offsetInverted": 13,
+                "source": "I5"
+            },
+            "E5": {
+                "offsetNormal": 16,
+                "offsetInverted": 17,
+                "source": "I6"
+            },
+            "E6": {
+                "offsetNormal": 20,
+                "offsetInverted": 21,
+                "source": "I7"
+            },
+            "E7": {
+                "offsetNormal": 24,
+                "offsetInverted": 25,
+                "source": "I8"
+            },
+            "E8": {
+                "offsetNormal": 28,
+                "offsetInverted": 29,
+                "source": "I9"
+            },
+            "E9": {
+                "offsetNormal": 34,
+                "offsetInverted": 35,
+                "source": "MC8_FB"
+            },
+            "E10": {
+                "offsetNormal": 30,
+                "offsetInverted": 31,
+                "source": "MC7_FB"
+            },
+            "E11": {
+                "offsetNormal": 26,
+                "offsetInverted": 27,
+                "source": "MC6_FB"
+            },
+            "E12": {
+                "offsetNormal": 22,
+                "offsetInverted": 23,
+                "source": "MC5_FB"
+            },
+            "E13": {
+                "offsetNormal": 18,
+                "offsetInverted": 19,
+                "source": "MC4_FB"
+            },
+            "E14": {
+                "offsetNormal": 14,
+                "offsetInverted": 15,
+                "source": "MC3_FB"
+            },
+            "E15": {
+                "offsetNormal": 10,
+                "offsetInverted": 11,
+                "source": "MC2_FB"
+            },
+            "E16": {
+                "offsetNormal": 6,
+                "offsetInverted": 7,
+                "source": "MC1_FB"
+            }
+        },
         "globals": {
             "__doc__": [
                 "# Global configuration fuses setting for 'registered'"
@@ -597,23 +692,18 @@
                     "registered": 2
                 }
             }
-        },
-        "array": {
-            "__doc__": [
-                "# Entries of the AND Array",
-                "",
-                "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
-                "",
-                "Each entry value (normal and inverted) is connected to a column of the AND Array, and is fed by a pad or the feedback of the macrocells."
-            ]
         }
     },
     "GAL16V8_Complex": {
         "pins": {
             "__doc__": [
-                "# Mapping of physical pin index to a pad name",
+                "# Mapping of physical pin index to a net name",
                 "",
-                "VCC and GND are dropped as the play no role in the logic."
+                "A **pad** is where the inputs and output pins physically connect to the dye.",
+                "For most pins, the pad is linked to a unique net (input or macrocell output).",
+                "For pins 1 and 11, depending on the global configuration of the PLD can drive an input net or a special net (clock and output enable), thus their mappings will change between those configurations.",
+                "",
+                "VCC and GND are dropped as they play no role in the logic."
             ],
             "DIP20": {
                 "1": "I1",
@@ -660,14 +750,14 @@
             "__doc__": [
                 "# Description of each macrocell",
                 "",
-                "* **pad name** : for most pins, where the inputs and output pins physically connect to the dye ; for pins 1 and 11, it will designate a named net that will be either the 'normal' input, either the special net like 'clock' or 'output enable'.",
+                "* **net name** : the net name that may be wired to the output of the macrocell.",
                 "* **pterm ranges** : for each of the 8 product terms that are inputs of a given macro cell, the range of 32 fuses that control each term.",
                 "* **pterm disable** : for each of the 8 product terms that are inputs of a given macro cell, the fuse that disable said product term.",
                 "* **configuration fuse** : each cell has a local configuration fuse to change its behaviour.",
                 "* **polarity** : fuse to setup whether the output is active high or low, in other word, normal or inverted output."
             ],
             "MC1": {
-                "pad": "M1",
+                "net_name": "M1",
                 "pterm_ranges": {
                     "PT1": [
                         0,
@@ -732,7 +822,7 @@
                 }
             },
             "MC2": {
-                "pad": "M2",
+                "net_name": "M2",
                 "pterm_ranges": {
                     "PT1": [
                         256,
@@ -797,7 +887,7 @@
                 }
             },
             "MC3": {
-                "pad": "M3",
+                "net_name": "M3",
                 "pterm_ranges": {
                     "PT1": [
                         512,
@@ -862,7 +952,7 @@
                 }
             },
             "MC4": {
-                "pad": "M4",
+                "net_name": "M4",
                 "pterm_ranges": {
                     "PT1": [
                         768,
@@ -927,7 +1017,7 @@
                 }
             },
             "MC5": {
-                "pad": "M5",
+                "net_name": "M5",
                 "pterm_ranges": {
                     "PT1": [
                         1024,
@@ -992,7 +1082,7 @@
                 }
             },
             "MC6": {
-                "pad": "M6",
+                "net_name": "M6",
                 "pterm_ranges": {
                     "PT1": [
                         1280,
@@ -1057,7 +1147,7 @@
                 }
             },
             "MC7": {
-                "pad": "M7",
+                "net_name": "M7",
                 "pterm_ranges": {
                     "PT1": [
                         1536,
@@ -1122,7 +1212,7 @@
                 }
             },
             "MC8": {
-                "pad": "M8",
+                "net_name": "M8",
                 "pterm_ranges": {
                     "PT1": [
                         1792,
@@ -1187,7 +1277,98 @@
                 }
             }
         },
-        "switches": null,
+        "array": {
+            "__doc__": [
+                "# Entries of the AND Array",
+                "",
+                "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
+                "For each entry, the offset in a line of the AND array is given for the normal and the inverted value.",
+                "",
+                "Each entry value (normal and inverted) is fed by a pad or the feedback of the macrocells.",
+                "",
+                "The entries are indexed like the pins of a package, in counter-clockwise manner, from 1 to 16, 1 being at the top-left."
+            ],
+            "E1": {
+                "offsetNormal": 0,
+                "offsetInverted": 1,
+                "source": "I2"
+            },
+            "E2": {
+                "offsetNormal": 4,
+                "offsetInverted": 5,
+                "source": "I3"
+            },
+            "E3": {
+                "offsetNormal": 8,
+                "offsetInverted": 9,
+                "source": "I4"
+            },
+            "E4": {
+                "offsetNormal": 12,
+                "offsetInverted": 13,
+                "source": "I5"
+            },
+            "E5": {
+                "offsetNormal": 16,
+                "offsetInverted": 17,
+                "source": "I6"
+            },
+            "E6": {
+                "offsetNormal": 20,
+                "offsetInverted": 21,
+                "source": "I7"
+            },
+            "E7": {
+                "offsetNormal": 24,
+                "offsetInverted": 25,
+                "source": "I8"
+            },
+            "E8": {
+                "offsetNormal": 28,
+                "offsetInverted": 29,
+                "source": "I9"
+            },
+            "E9": {
+                "offsetNormal": 34,
+                "offsetInverted": 35,
+                "source": "I11"
+            },
+            "E10": {
+                "offsetNormal": 30,
+                "offsetInverted": 31,
+                "source": "MC7_FB"
+            },
+            "E11": {
+                "offsetNormal": 26,
+                "offsetInverted": 27,
+                "source": "MC6_FB"
+            },
+            "E12": {
+                "offsetNormal": 22,
+                "offsetInverted": 23,
+                "source": "MC5_FB"
+            },
+            "E13": {
+                "offsetNormal": 18,
+                "offsetInverted": 19,
+                "source": "MC4_FB"
+            },
+            "E14": {
+                "offsetNormal": 14,
+                "offsetInverted": 15,
+                "source": "MC3_FB"
+            },
+            "E15": {
+                "offsetNormal": 10,
+                "offsetInverted": 11,
+                "source": "MC2_FB"
+            },
+            "E16": {
+                "offsetNormal": 6,
+                "offsetInverted": 7,
+                "source": "I1"
+            }
+        },
         "globals": {
             "__doc__": [
                 "# Global configuration fuses setting for 'complex'"
@@ -1201,23 +1382,18 @@
                     "complex": 3
                 }
             }
-        },
-        "array": {
-            "__doc__": [
-                "# Entries of the AND Array",
-                "",
-                "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
-                "",
-                "Each entry value (normal and inverted) is connected to a column of the AND Array, and is fed by a pad or the feedback of the macrocells."
-            ]
         }
     },
     "GAL16V8_Simple": {
         "pins": {
             "__doc__": [
-                "# Mapping of physical pin index to a pad name",
+                "# Mapping of physical pin index to a net name",
                 "",
-                "VCC and GND are dropped as the play no role in the logic."
+                "A **pad** is where the inputs and output pins physically connect to the dye.",
+                "For most pins, the pad is linked to a unique net (input or macrocell output).",
+                "For pins 1 and 11, depending on the global configuration of the PLD can drive an input net or a special net (clock and output enable), thus their mappings will change between those configurations.",
+                "",
+                "VCC and GND are dropped as they play no role in the logic."
             ],
             "DIP20": {
                 "1": "I1",
@@ -1264,14 +1440,14 @@
             "__doc__": [
                 "# Description of each macrocell",
                 "",
-                "* **pad name** : for most pins, where the inputs and output pins physically connect to the dye ; for pins 1 and 11, it will designate a named net that will be either the 'normal' input, either the special net like 'clock' or 'output enable'.",
+                "* **net name** : the net name that may be wired to the output of the macrocell.",
                 "* **pterm ranges** : for each of the 8 product terms that are inputs of a given macro cell, the range of 32 fuses that control each term.",
                 "* **pterm disable** : for each of the 8 product terms that are inputs of a given macro cell, the fuse that disable said product term.",
                 "* **configuration fuse** : each cell has a local configuration fuse to change its behaviour.",
                 "* **polarity** : fuse to setup whether the output is active high or low, in other word, normal or inverted output."
             ],
             "MC1": {
-                "pad": "M1",
+                "net_name": "M1",
                 "pterm_ranges": {
                     "PT1": [
                         0,
@@ -1336,7 +1512,7 @@
                 }
             },
             "MC2": {
-                "pad": "M2",
+                "net_name": "M2",
                 "pterm_ranges": {
                     "PT1": [
                         256,
@@ -1401,7 +1577,7 @@
                 }
             },
             "MC3": {
-                "pad": "M3",
+                "net_name": "M3",
                 "pterm_ranges": {
                     "PT1": [
                         512,
@@ -1466,7 +1642,7 @@
                 }
             },
             "MC4": {
-                "pad": "M4",
+                "net_name": "M4",
                 "pterm_ranges": {
                     "PT1": [
                         768,
@@ -1531,7 +1707,7 @@
                 }
             },
             "MC5": {
-                "pad": "M5",
+                "net_name": "M5",
                 "pterm_ranges": {
                     "PT1": [
                         1024,
@@ -1596,7 +1772,7 @@
                 }
             },
             "MC6": {
-                "pad": "M6",
+                "net_name": "M6",
                 "pterm_ranges": {
                     "PT1": [
                         1280,
@@ -1661,7 +1837,7 @@
                 }
             },
             "MC7": {
-                "pad": "M7",
+                "net_name": "M7",
                 "pterm_ranges": {
                     "PT1": [
                         1536,
@@ -1726,7 +1902,7 @@
                 }
             },
             "MC8": {
-                "pad": "M8",
+                "net_name": "M8",
                 "pterm_ranges": {
                     "PT1": [
                         1792,
@@ -1791,7 +1967,98 @@
                 }
             }
         },
-        "switches": null,
+        "array": {
+            "__doc__": [
+                "# Entries of the AND Array",
+                "",
+                "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
+                "For each entry, the offset in a line of the AND array is given for the normal and the inverted value.",
+                "",
+                "Each entry value (normal and inverted) is fed by a pad or the feedback of the macrocells.",
+                "",
+                "The entries are indexed like the pins of a package, in counter-clockwise manner, from 1 to 16, 1 being at the top-left."
+            ],
+            "E1": {
+                "offsetNormal": 0,
+                "offsetInverted": 1,
+                "source": "I2"
+            },
+            "E2": {
+                "offsetNormal": 4,
+                "offsetInverted": 5,
+                "source": "I3"
+            },
+            "E3": {
+                "offsetNormal": 8,
+                "offsetInverted": 9,
+                "source": "I4"
+            },
+            "E4": {
+                "offsetNormal": 12,
+                "offsetInverted": 13,
+                "source": "I5"
+            },
+            "E5": {
+                "offsetNormal": 16,
+                "offsetInverted": 17,
+                "source": "I6"
+            },
+            "E6": {
+                "offsetNormal": 20,
+                "offsetInverted": 21,
+                "source": "I7"
+            },
+            "E7": {
+                "offsetNormal": 24,
+                "offsetInverted": 25,
+                "source": "I8"
+            },
+            "E8": {
+                "offsetNormal": 28,
+                "offsetInverted": 29,
+                "source": "I9"
+            },
+            "E9": {
+                "offsetNormal": 34,
+                "offsetInverted": 35,
+                "source": "I1"
+            },
+            "E10": {
+                "offsetNormal": 30,
+                "offsetInverted": 31,
+                "source": "M8"
+            },
+            "E11": {
+                "offsetNormal": 26,
+                "offsetInverted": 27,
+                "source": "M7"
+            },
+            "E12": {
+                "offsetNormal": 22,
+                "offsetInverted": 23,
+                "source": "M6"
+            },
+            "E13": {
+                "offsetNormal": 18,
+                "offsetInverted": 19,
+                "source": "M3"
+            },
+            "E14": {
+                "offsetNormal": 14,
+                "offsetInverted": 15,
+                "source": "M2"
+            },
+            "E15": {
+                "offsetNormal": 10,
+                "offsetInverted": 11,
+                "source": "M1"
+            },
+            "E16": {
+                "offsetNormal": 6,
+                "offsetInverted": 7,
+                "source": "I11"
+            }
+        },
         "globals": {
             "__doc__": [
                 "# Global configuration fuses setting for 'simple'"
@@ -1805,15 +2072,6 @@
                     "simple": 1
                 }
             }
-        },
-        "array": {
-            "__doc__": [
-                "# Entries of the AND Array",
-                "",
-                "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
-                "",
-                "Each entry value (normal and inverted) is connected to a column of the AND Array, and is fed by a pad or the feedback of the macrocells."
-            ]
         }
     }
 }

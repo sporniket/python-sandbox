@@ -11,7 +11,7 @@ def initStructRoot(x):
             # "specials",
             # "blocks",
             "macrocells",
-            "switches","globals"
+            "array","globals"
         ]:
             x[n][s] = None
 
@@ -28,35 +28,60 @@ def initGlobals(x, modeName, modeValue):
         }
     }
 
-def initArray(x):
+def initArray(x, mode:str):
     x["array"] = {
         "__doc__":[
             "# Entries of the AND Array",
             "",
             "The AND Array (64 lines of 32 columns) has 16 entries that are injected into it, as well as the inverted value of each entries.",
+            "For each entry, the offset in a line of the AND array is given for the normal and the inverted value.",
             "",
-            "Each entry value (normal and inverted) is connected to a column of the AND Array, and is fed by a pad or the feedback of the macrocells.",
+            "Each entry value (normal and inverted) is fed by a pad or the feedback of the macrocells.",
+            "",
+            "The entries are indexed like the pins of a package, in counter-clockwise manner, from 1 to 16, 1 being at the top-left."
         ]
     }
-    def makeEntry(x, name:str, offsetNormal:int, source:str):
-        x[name] = {
-            "offsetNormal":offsetNormal,
-            "offsetInverted":offsetNormal+1,
-            "source":source
+
+    # The regular part : entries 1 to 8
+    for i in range(0,8):
+        x["array"][f"E{i+1}"] = {
+            "offsetNormal":i*4,
+            "offsetInverted":i*4+1,
+            "source":f"I{i+2}"
         }
     
-    for specs in [
-        ["E1", 0, ]
-    ]:
-        # HERE TODO
-        pass
+    # The part specific for each mode
+    if "registered" == mode:
+        for i in range(0,8):
+            j = 8 - i
+            x["array"][f"E{i+9}"] = {
+                "offsetNormal":j*4+2,
+                "offsetInverted":j*4+3,
+                "source":f"MC{j}_FB"
+            }
+    elif "complex" == mode:
+        for i in range(0,8):
+            j = 8 - i
+            x["array"][f"E{i+9}"] = {
+                "offsetNormal":j*4+2,
+                "offsetInverted":j*4+3,
+                "source":("I11" if i == 0 else "I1" if i == 7 else f"MC{j}_FB")
+            }
+    else: # simple
+        for i in range(0,8):
+            j = 8 - i
+            x["array"][f"E{i+9}"] = {
+                "offsetNormal":j*4+2,
+                "offsetInverted":j*4+3,
+                "source":("I1" if i == 0 else "I11" if i == 7 else f"M{j+1}" if i in range(1,4) else f"M{j-1}")
+            }
 
 def initMacroCells(x):
     x["macrocells"] = {
         "__doc__":[
             "# Description of each macrocell",
             "",
-            "* **pad name** : for most pins, where the inputs and output pins physically connect to the dye ; for pins 1 and 11, it will designate a named net that will be either the 'normal' input, either the special net like 'clock' or 'output enable'.",
+            "* **net name** : the net name that may be wired to the output of the macrocell.",
             "* **pterm ranges** : for each of the 8 product terms that are inputs of a given macro cell, the range of 32 fuses that control each term.",
             "* **pterm disable** : for each of the 8 product terms that are inputs of a given macro cell, the fuse that disable said product term.",
             "* **configuration fuse** : each cell has a local configuration fuse to change its behaviour.",
@@ -68,7 +93,7 @@ def initMacroCells(x):
         ptdOffset=2128 + 8*i
 
         x["macrocells"][f"MC{i+1}"] = {
-            "pad":f"M{i+1}",
+            "net_name":f"M{i+1}",
             "pterm_ranges":{f"PT{j+1}":[ptermsOffset+32*j,ptermsOffset+32*(j+1)] for j in range(0,8)},
             "pterm_disables":{f"PTD{j+1}":ptdOffset+j for j in range(0,8)},
             "configuration":{
@@ -90,9 +115,13 @@ def initMacroCells(x):
 def initPins(x,*, pin1:str="I1", pin11:str = "I10"):
     x["pins"] = {
         "__doc__":[
-            "# Mapping of physical pin index to a pad name",
+            "# Mapping of physical pin index to a net name",
             "",
-            "VCC and GND are dropped as the play no role in the logic."
+            "A **pad** is where the inputs and output pins physically connect to the dye.",
+            "For most pins, the pad is linked to a unique net (input or macrocell output).",
+            "For pins 1 and 11, depending on the global configuration of the PLD can drive an input net or a special net (clock and output enable), thus their mappings will change between those configurations.",
+            "",
+            "VCC and GND are dropped as they play no role in the logic."
         ]
     }
     for pkg in ["DIP20","PLCC20"]:
@@ -125,8 +154,8 @@ if __name__ == '__main__':
         initGlobals(result[specs[0]],specs[1],specs[2])
 
     # 3.
-    for specs in [["GAL16V8_Registered"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
-        initArray(result[specs[0]])
+    for specs in [["GAL16V8_Registered","registered"],["GAL16V8_Complex", "complex"],["GAL16V8_Simple", "simple"]]:
+        initArray(result[specs[0]], specs[1])
 
     # 4.
     for specs in [["GAL16V8_Registered"],["GAL16V8_Complex"],["GAL16V8_Simple"]]:
